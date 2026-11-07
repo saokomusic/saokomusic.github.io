@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAOKO · Diseño anterior</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="SAOKO es la app de música para Android con SAOKO RADIO, SAOKO IA, SAOKARAOKE, letras sincronizadas, videos, descargas y transiciones como de DJ. Descárgala gratis.">
+  <meta name="theme-color" content="#0B0A12">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://pagead2.googlesyndication.com https://*.adtrafficquality.google https://www.googletagservices.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https://api.github.com https://*.supabase.co https://pagead2.googlesyndication.com https://*.adtrafficquality.google https://googleads.g.doubleclick.net; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <script>
+    // Nadie puede meter esta página dentro de otra (protección contra engaños de clics).
+    if (window.top !== window.self) window.top.location = window.self.location;
+    // Tema guardado (claro/oscuro) antes de dibujar, para que no parpadee.
+    try { var t = localStorage.getItem("saoko-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="img/saoko-icon.svg?v=3">
+  <link rel="icon" type="image/png" sizes="64x64" href="img/saoko-icon.png?v=3">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+  <!-- Vista previa al compartir el enlace (WhatsApp, Facebook, X, Telegram) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SAOKO · Tu música, a tu manera">
+  <meta property="og:description" content="SAOKO RADIO, SAOKO IA, SAOKARAOKE, letras sincronizadas, videos y descargas. Gratis para Android.">
+  <meta property="og:image" content="https://saokomusic.github.io/img/og.png">
+  <meta property="og:url" content="https://saokomusic.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=block" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0B0A12;
+      --bg-2: #13111D;
+      --card: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --text: #FFFFFF;
+      --muted: #A8A4BF;
+      --pink: #FF00B0;
+      --pink-2: #FF2D9B;
+      --lilac: #A6A3FF;
+      --yellow: #FFE600;
+      --gradient: linear-gradient(90deg, var(--pink) 0%, var(--lilac) 100%);
+      --radius: 22px;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif; line-height: 1.55;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    a { color: inherit; }
+    img, video { display: block; max-width: 100%; }
+    .icon {
+      font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal;
+      font-size: 24px; line-height: 1; display: inline-block; white-space: nowrap;
+      font-variation-settings: "FILL" 1, "wght" 500;
+      -webkit-font-feature-settings: "liga"; font-feature-settings: "liga";
+    }
+    .wrap { width: min(1160px, 100% - 32px); margin-inline: auto; }
+    .grad-text { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* ---------- Barra superior ---------- */
+    header {
+      position: sticky; top: 0; z-index: 30;
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      background: rgba(11, 10, 18, 0.72); border-bottom: 1px solid var(--card-border);
+    }
+    .nav { display: flex; align-items: center; gap: 24px; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 20px; letter-spacing: .5px; }
+    .brand img { width: 34px; height: 34px; border-radius: 10px; }
+    .nav nav { display: flex; gap: 22px; margin-left: auto; }
+    .nav nav a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; }
+    .nav nav a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      border: 0; cursor: pointer; text-decoration: none; font: inherit; font-weight: 700;
+      border-radius: 999px; padding: 14px 26px; font-size: 16px;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--gradient); color: #fff; box-shadow: 0 10px 34px rgba(255, 0, 176, .35); }
+    .btn-primary:hover { box-shadow: 0 12px 44px rgba(255, 0, 176, .5); }
+    .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--card-border); }
+    .btn-ghost:hover { background: rgba(255, 255, 255, .09); }
+    .btn-small { padding: 9px 18px; font-size: 14px; }
+
+    /* ---------- Teléfono ---------- */
+    .phone {
+      position: relative; width: 290px; aspect-ratio: 1 / 2.05; border-radius: 46px; padding: 10px;
+      background: linear-gradient(160deg, #34304A, #121019 60%);
+      border: 1px solid rgba(255, 255, 255, .16);
+      box-shadow: 0 50px 100px rgba(0, 0, 0, .65), 0 0 0 6px rgba(255, 255, 255, .03), inset 0 0 0 2px rgba(0, 0, 0, .6);
+    }
+    .phone::before { /* cámara */
+      content: ""; position: absolute; top: 20px; left: 50%; width: 12px; height: 12px; margin-left: -6px;
+      border-radius: 50%; background: #05050A; z-index: 3; box-shadow: 0 0 0 2px rgba(255, 255, 255, .06);
+    }
+    .screen { position: relative; height: 100%; border-radius: 37px; overflow: hidden; background: #000; }
+    .screen > img, .screen > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+    /* ---------- Portada ---------- */
+    .hero { position: relative; padding: 64px 0 40px; overflow: hidden; }
+    .glow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .glow::before, .glow::after { content: ""; position: absolute; border-radius: 50%; filter: blur(110px); opacity: .45; }
+    .glow::before { width: 620px; height: 620px; background: var(--pink); top: -260px; left: -180px; }
+    .glow::after { width: 560px; height: 560px; background: #6E64FF; top: 120px; right: -220px; opacity: .35; }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
+      background: var(--card); border: 1px solid var(--card-border); color: #FFC8EC; font-weight: 600; font-size: 14px;
+    }
+    .pill .icon { font-size: 18px; color: var(--pink-2); }
+    h1 { font-size: clamp(42px, 6.4vw, 80px); line-height: 1.02; margin: 18px 0; font-weight: 800; letter-spacing: -2px; }
+    h1 .line { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.06em; }
+    h1 .line > span { display: inline-block; }
+    .lead { font-size: clamp(17px, 2vw, 20px); color: var(--muted); max-width: 560px; margin: 0 0 28px; }
+
+    .dl-choices { display: grid; gap: 12px; margin: 0 0 16px; max-width: 560px; }
+    .dl-choice {
+      display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 18px; text-decoration: none; color: var(--text); text-align: left;
+      background: var(--card); border: 1px solid var(--card-border); transition: transform .15s ease, border-color .15s ease;
+    }
+    .dl-choice:hover { transform: translateY(-2px); border-color: rgba(255, 45, 155, .45); }
+    .dl-choice .icon { font-size: 30px; color: var(--pink-2); }
+    .dl-choice.dl-main { background: var(--gradient); border-color: transparent; box-shadow: 0 10px 34px rgba(255, 0, 176, .35); }
+    .dl-choice.dl-main .icon, .dl-choice.dl-main small { color: #fff; }
+    .dl-text b { display: block; font-size: 17px; }
+    .dl-text small { color: var(--muted); font-size: 14px; line-height: 1.4; display: block; margin-top: 2px; }
+    .dl-size { margin-left: auto; font-size: 13px; opacity: .85; white-space: nowrap; }
+    .meta { margin-top: 14px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+    .meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .meta .icon { font-size: 18px; }
+    .desktop-note {
+      display: none; margin-top: 16px; padding: 12px 16px; border-radius: 14px; max-width: 560px;
+      background: rgba(41, 182, 246, .1); border: 1px solid rgba(41, 182, 246, .3); color: #BFE8FF; font-size: 14px;
+    }
+    .desktop-note.show { display: flex; gap: 10px; align-items: flex-start; }
+
+    .hero-stage { position: relative; height: 640px; display: grid; place-items: center; }
+    .hero-stage .phone { z-index: 2; }
+    .float {
+      position: absolute; z-index: 3; border-radius: 22px; overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14); box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+    }
+    .float-radio { width: 300px; left: -70px; bottom: 70px; }
+    .float-ia {
+      right: -24px; top: 90px; width: 150px; padding: 14px; text-align: center;
+      background: rgba(28, 24, 44, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .float-ia img { width: 76px; margin: 0 auto 6px; }
+    .float-ia b { font-size: 14px; display: block; }
+    .float-ia small { color: var(--muted); font-size: 12px; line-height: 1.3; display: block; }
+
+    /* ---------- Carrusel infinito de pantallas ---------- */
+    .marquee { padding: 30px 0 10px; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+    .marquee-row { display: flex; gap: 18px; width: max-content; animation: slide 60s linear infinite; }
+    .marquee-row.rev { animation-direction: reverse; margin-top: 18px; }
+    .marquee-row img { width: 170px; aspect-ratio: 1 / 2; object-fit: cover; object-position: top; border-radius: 22px; border: 1px solid var(--card-border); }
+    @keyframes slide { to { transform: translateX(-50%); } }
+
+    /* ---------- Secciones ---------- */
+    section { padding: 88px 0; position: relative; scroll-margin-top: 48px; }
+    .section-head { text-align: center; max-width: 700px; margin: 0 auto 48px; }
+    .eyebrow { color: var(--pink-2); font-weight: 800; letter-spacing: 2px; font-size: 13px; text-transform: uppercase; }
+    h2 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; margin: 10px 0 14px; letter-spacing: -1px; }
+    .section-head p { color: var(--muted); margin: 0; font-size: 18px; }
+
+    /* ---------- Recorrido: el teléfono se queda y la pantalla cambia ---------- */
+    .tour { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .tour-steps { padding: 10vh 0; }
+    .tour-step { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; max-width: 470px; opacity: .3; transition: opacity .4s ease; }
+    .tour-step.active { opacity: 1; }
+    .tour-step .num { font-weight: 800; color: var(--pink-2); letter-spacing: 2px; font-size: 13px; }
+    .tour-step h3 { font-size: clamp(28px, 3.4vw, 42px); line-height: 1.1; margin: 8px 0 12px; letter-spacing: -.8px; }
+    .tour-step p { color: var(--muted); font-size: 18px; margin: 0 0 14px; }
+    .tour-step ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .tour-step li { display: flex; gap: 10px; align-items: flex-start; color: #DCD9EC; font-size: 15px; }
+    .tour-step li .icon { font-size: 20px; color: var(--pink-2); }
+    .tour-step .shot { display: none; }
+    .tour-phone-col { position: relative; }
+    .tour-sticky { position: sticky; top: max(72px, calc(50vh - 300px)); height: min(600px, calc(100vh - 96px)); display: grid; place-items: center; }
+    .tour-sticky .phone { height: min(598px, calc(100vh - 100px)); width: auto; }
+    .tour-sticky .screen > * { opacity: 0; transform: scale(1.04); transition: opacity .5s ease, transform .6s ease; }
+    .tour-sticky .screen > .on { opacity: 1; transform: none; }
+    .tour-glow { position: absolute; width: 420px; height: 420px; border-radius: 50%; filter: blur(90px); opacity: .45; background: var(--pink); transition: background .6s ease; z-index: -1; }
+    .tour-dots { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: grid; gap: 8px; }
+    .tour-dots i { width: 6px; height: 6px; border-radius: 9px; background: rgba(255, 255, 255, .22); transition: height .3s ease, background .3s ease; }
+    .tour-dots i.on { height: 22px; background: var(--pink-2); }
+
+    /* ---------- Karaoke ---------- */
+    .karaoke { overflow: hidden; }
+    .fan { --spread: 250px; position: relative; height: 620px; display: flex; justify-content: center; align-items: center; }
+    .fan .phone { position: absolute; width: 260px; }
+    .fan .k1 { transform: translateX(-250px) rotate(-10deg) translateY(30px); }
+    .fan .k2 { z-index: 2; }
+    .fan .k3 { transform: translateX(250px) rotate(10deg) translateY(30px); }
+    .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+    .chip { padding: 8px 16px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-border); font-weight: 600; font-size: 14px; display: inline-flex; gap: 8px; align-items: center; }
+    .chip .icon { font-size: 18px; color: var(--pink-2); }
+
+    /* ---------- Recap: historias en horizontal ---------- */
+    .recap { background: radial-gradient(80% 60% at 50% 0%, rgba(124, 34, 170, .35), transparent 70%); }
+    .recap-pin { overflow: hidden; }
+    .recap-track { display: flex; gap: 28px; padding: 0 max(16px, calc(50vw - 560px)); width: max-content; }
+    .recap-card { width: 270px; flex: none; }
+    .recap-card .phone { width: 270px; }
+    .recap-card p { color: var(--muted); text-align: center; margin: 16px 0 0; font-weight: 600; }
+
+    /* ---------- Widgets ---------- */
+    .widgets { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .widget-stack { position: relative; display: grid; place-items: center; min-height: 520px; }
+    .widget-stack .w1 { width: 340px; border-radius: 30px; overflow: hidden; box-shadow: 0 40px 90px rgba(0, 0, 0, .6); border: 1px solid rgba(255, 255, 255, .12); }
+    .widget-stack .w2 { position: absolute; width: 330px; bottom: 6px; right: 0; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, .6); border: 1px solid rgba(255, 255, 255, .12); }
+    .widget-copy h2 { text-align: left; }
+    .widget-copy p { color: var(--muted); font-size: 18px; }
+
+    /* ---------- Funciones (resumen) ---------- */
+    .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .feature { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 22px; transition: transform .2s ease, border-color .2s ease; }
+    .feature:hover { transform: translateY(-3px); border-color: rgba(255, 45, 155, .35); }
+    .feature .ico { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--gradient); margin-bottom: 14px; }
+    .feature .ico .icon { color: #fff; font-size: 24px; }
+    .feature h3 { margin: 0 0 6px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+    /* ---------- Instalar ---------- */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+    .step { background: var(--bg-2); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 26px; }
+    .step::before {
+      counter-increment: step; content: counter(step); display: grid; place-items: center;
+      width: 38px; height: 38px; border-radius: 50%; background: var(--gradient); font-weight: 800; margin-bottom: 14px;
+    }
+    .step h3 { margin: 0 0 6px; font-size: 18px; }
+    .step p { margin: 0; color: var(--muted); font-size: 15px; }
+    .tip {
+      margin-top: 18px; display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; border-radius: 16px;
+      background: rgba(255, 213, 79, .08); border: 1px solid rgba(255, 213, 79, .25); color: #FFE9A8; font-size: 15px;
+    }
+    .tip .icon { color: #FFD54F; }
+    .versions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .version { display: flex; gap: 16px; align-items: center; text-decoration: none; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 18px 20px; }
+    .version:hover { border-color: rgba(255, 45, 155, .4); }
+    .version .icon { font-size: 30px; color: var(--pink-2); }
+    .version b { display: block; }
+    .version small { color: var(--muted); font-size: 14px; }
+    .version .size { margin-left: auto; color: var(--muted); font-size: 14px; white-space: nowrap; }
+
+    /* ---------- Preguntas ---------- */
+    .faq { max-width: 780px; margin: 0 auto; display: grid; gap: 12px; }
+    details { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 4px 22px; }
+    details[open] { background: rgba(255, 255, 255, .07); }
+    summary { cursor: pointer; list-style: none; padding: 16px 0; font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 12px; }
+    summary::-webkit-details-marker { display: none; }
+    summary .icon { margin-left: auto; color: var(--muted); transition: transform .2s ease; }
+    details[open] summary .icon { transform: rotate(180deg); }
+    details p { margin: 0 0 18px; color: var(--muted); }
+
+    .final {
+      text-align: center; border-radius: 32px; padding: 60px 24px;
+      background: radial-gradient(120% 140% at 0% 0%, rgba(255, 0, 176, .35), transparent 55%),
+                  radial-gradient(120% 140% at 100% 100%, rgba(110, 100, 255, .35), transparent 55%), var(--bg-2);
+      border: 1px solid var(--card-border);
+    }
+    .final img { width: 84px; height: 84px; border-radius: 24px; margin: 0 auto; box-shadow: 0 14px 40px rgba(255, 0, 176, .4); }
+    .final h2 { margin-top: 18px; }
+    .final p { color: var(--muted); margin: 0 0 26px; }
+
+    footer { border-top: 1px solid var(--card-border); padding: 36px 0 44px; color: var(--muted); font-size: 14px; }
+    .foot { display: flex; flex-wrap: wrap; gap: 18px 40px; justify-content: space-between; }
+    .foot a { color: var(--text); }
+    .foot p { margin: 4px 0; }
+
+
+    /* =====================================================================
+       SAOKO 2026 · capa visual: temas, fondo vivo, teléfonos reales, chat
+       ===================================================================== */
+    @property --c1 { syntax: "<color>"; inherits: true; initial-value: #FF00B0; }
+    @property --c2 { syntax: "<color>"; inherits: true; initial-value: #6E64FF; }
+    @property --c3 { syntax: "<color>"; inherits: true; initial-value: #00D1FF; }
+    @property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+    :root {
+      --c1: #FF00B0; --c2: #6E64FF; --c3: #00D1FF;
+      --header-bg: rgba(11, 10, 18, .62); --phone-shell: linear-gradient(150deg, #6B6782, #24212F 38%, #0E0D14 62%, #3A3650);
+      --aurora-opacity: .55; --grid-line: rgba(255, 255, 255, .045); --shadow: rgba(0, 0, 0, .6);
+      transition: --c1 1.2s ease, --c2 1.2s ease, --c3 1.2s ease;
+    }
+    :root[data-theme="light"] {
+      --bg: #F7F5FC; --bg-2: #FFFFFF; --card: rgba(255, 255, 255, .72); --card-border: rgba(20, 16, 40, .10);
+      --text: #15121F; --muted: #5D5873; --header-bg: rgba(247, 245, 252, .7); --aurora-opacity: .38;
+      --grid-line: rgba(20, 16, 40, .05); --shadow: rgba(40, 20, 80, .22); color-scheme: light;
+      --phone-shell: linear-gradient(150deg, #F4F2FA, #BDB8CC 40%, #8E89A3 62%, #E7E4F0);
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #F7F5FC; --bg-2: #FFFFFF; --card: rgba(255, 255, 255, .72); --card-border: rgba(20, 16, 40, .10);
+        --text: #15121F; --muted: #5D5873; --header-bg: rgba(247, 245, 252, .7); --aurora-opacity: .38;
+        --grid-line: rgba(20, 16, 40, .05); --shadow: rgba(40, 20, 80, .22); color-scheme: light;
+        --phone-shell: linear-gradient(150deg, #F4F2FA, #BDB8CC 40%, #8E89A3 62%, #E7E4F0);
+      }
+    }
+    body { background: var(--bg); color: var(--text); transition: background .5s ease, color .5s ease; }
+    .grad-text {
+      background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c1)); background-size: 300% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradShift 8s linear infinite;
+    }
+    @keyframes gradShift { to { background-position: 300% 0; } }
+
+    /* Fondo vivo: manchas de color que se mueven y cambian como el reproductor de SAOKO */
+    .aurora { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+    .aurora i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: var(--aurora-opacity); mix-blend-mode: normal; will-change: transform; }
+    .aurora i:nth-child(1) { width: 60vmax; height: 60vmax; background: var(--c1); top: -25vmax; left: -15vmax; animation: drift1 26s ease-in-out infinite alternate; }
+    .aurora i:nth-child(2) { width: 52vmax; height: 52vmax; background: var(--c2); bottom: -22vmax; right: -14vmax; animation: drift2 32s ease-in-out infinite alternate; }
+    .aurora i:nth-child(3) { width: 34vmax; height: 34vmax; background: var(--c3); top: 30%; left: 40%; opacity: calc(var(--aurora-opacity) * .7); animation: drift3 22s ease-in-out infinite alternate; }
+    .aurora::after { /* cuadrícula futurista que se desvanece */
+      content: ""; position: absolute; inset: 0;
+      background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 56px 56px; mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%);
+    }
+    .aurora { animation: hue 40s linear infinite; }
+    @keyframes hue { 50% { filter: hue-rotate(40deg) saturate(1.15); } }
+    @keyframes drift1 { to { transform: translate(18vw, 14vh) scale(1.15); } }
+    @keyframes drift2 { to { transform: translate(-16vw, -18vh) scale(1.1); } }
+    @keyframes drift3 { to { transform: translate(-22vw, 12vh) scale(.85); } }
+    .glow { display: none; }
+    section.band { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--c2) 10%, transparent) 30%, color-mix(in srgb, var(--c1) 10%, transparent) 70%, transparent); }
+
+    /* Barra superior con logo vectorial y selector de tema */
+    header { background: var(--header-bg); }
+    .brand svg { height: 34px; width: auto; color: var(--text); display: block; }
+    .brand img { display: none; }
+    .theme-switch {
+      position: relative; width: 58px; height: 30px; border-radius: 999px; border: 1px solid var(--card-border); cursor: pointer;
+      background: var(--card); flex: none; padding: 0; margin-left: 4px;
+    }
+    .theme-switch .icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--muted); }
+    .theme-switch .icon.sun { left: 7px; } .theme-switch .icon.moon { right: 7px; }
+    .theme-switch .knob {
+      position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 2px 10px rgba(0, 0, 0, .35); transition: transform .35s cubic-bezier(.5, 1.6, .4, 1);
+    }
+    :root[data-theme="dark"] .theme-switch .knob { transform: translateX(28px); }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme-switch .knob { transform: translateX(28px); } }
+
+    /* Botones con brillo que recorre el borde */
+    .btn-primary { background: linear-gradient(90deg, var(--c1), var(--c2)); box-shadow: 0 10px 34px color-mix(in srgb, var(--c1) 45%, transparent); position: relative; overflow: hidden; }
+    .btn-primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .35) 50%, transparent 70%); transform: translateX(-120%); animation: shine 3.6s ease-in-out infinite; }
+    @keyframes shine { 60%, 100% { transform: translateX(120%); } }
+    .feature, details, .step, .version, .dl-choice { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .feature { position: relative; }
+    .feature::before {
+      content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0; transition: opacity .3s;
+      background: conic-gradient(from var(--ang), var(--c1), var(--c2), var(--c3), var(--c1));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: spin 4s linear infinite;
+    }
+    .feature:hover::before { opacity: 1; }
+    @keyframes spin { to { --ang: 360deg; } }
+    .feature .ico, .step::before { background: linear-gradient(135deg, var(--c1), var(--c2)); }
+
+    /* Teléfonos como los de verdad: bordes finos, isla de la cámara y barra de estado */
+    .phone {
+      aspect-ratio: 1 / 2.13; border-radius: 12.5% / 5.87%; padding: 4px; border: 0; /* esquinas como un teléfono real (proporcionales a su tamaño) */
+      background: var(--phone-shell);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, .22) inset, 0 40px 90px var(--shadow), 0 0 60px color-mix(in srgb, var(--c1) 22%, transparent);
+    }
+    .phone::before { top: 12px; width: 27%; height: 17px; margin-left: -13.5%; border-radius: 12px; background: #000; box-shadow: none; z-index: 4; }
+    .phone::after { /* botones laterales */
+      content: ""; position: absolute; right: -2px; top: 22%; width: 3px; height: 13%; border-radius: 0 3px 3px 0; background: var(--phone-shell);
+    }
+    .screen { border-radius: 11.4% / 5.35%; container-type: inline-size; }
+    .screen::before { /* barra de estado: hora */
+      content: "9:41"; position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: 11cqw; padding: 0 0 0 11cqw;
+      display: flex; align-items: center; font: 600 4.3cqw/1 "Plus Jakarta Sans", system-ui, sans-serif; color: #fff; background: #000;
+    }
+    .screen::after { /* señal, wifi y batería */
+      content: ""; position: absolute; z-index: 3; top: 3.6cqw; right: 9cqw; width: 17cqw; height: 4cqw;
+      background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 68 16' fill='white'%3E%3Crect x='0' y='10' width='3' height='5' rx='1'/%3E%3Crect x='5' y='7' width='3' height='8' rx='1'/%3E%3Crect x='10' y='4' width='3' height='11' rx='1'/%3E%3Crect x='15' y='1' width='3' height='14' rx='1'/%3E%3Cpath d='M31 14l-4-4a6 6 0 0 1 8 0zM24 7a11 11 0 0 1 14 0l-2 2a8 8 0 0 0-10 0z'/%3E%3Crect x='44' y='3' width='20' height='10' rx='3' fill='none' stroke='white' stroke-width='1.6'/%3E%3Crect x='46.5' y='5.5' width='13' height='5' rx='1.5'/%3E%3Crect x='65' y='6' width='2' height='4' rx='1'/%3E%3C/svg%3E");
+    }
+    .screen > img, .screen > video { top: 11cqw; height: calc(100% - 11cqw); }
+    .marquee-row img { border-radius: 26px; border: 3px solid color-mix(in srgb, var(--text) 14%, transparent); }
+
+    /* Recorrido: el teléfono fijo se ve COMPLETO (arriba y abajo) */
+    .tour-sticky { --ph: min(640px, calc(100vh - 120px)); top: calc(64px + (100vh - 64px - var(--ph)) / 2); height: var(--ph); }
+    .tour-sticky .phone { height: var(--ph); width: auto; }
+    .tour-glow { background: var(--c1); }
+
+    /* Hoja de descarga: los dos APK con la recomendación */
+    .sheet { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(6, 4, 14, .66); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .sheet[hidden] { display: none; }
+    .sheet-box { width: min(560px, 100%); background: var(--bg-2); color: var(--text); border: 1px solid var(--card-border); border-radius: 28px; padding: 22px; box-shadow: 0 30px 90px rgba(0, 0, 0, .5); animation: pop .35s cubic-bezier(.3, 1.4, .5, 1); }
+    @keyframes pop { from { transform: translateY(24px) scale(.96); opacity: 0; } }
+    .sheet-box h3 { margin: 0 0 4px; font-size: 22px; }
+    .sheet-box .muted { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+    .sheet-box .dl-choice { margin-top: 10px; }
+    .rec-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: #22C55E; color: #04210F; font-size: 11px; font-weight: 800; vertical-align: middle; }
+    .sheet-close { float: right; background: transparent; border: 0; color: var(--muted); cursor: pointer; }
+
+    /* Chat: SAOKO Asistente y Servicio al cliente */
+    .chat-fab {
+      position: fixed; right: 18px; bottom: 18px; z-index: 70; width: 64px; height: 64px; border-radius: 50%; border: 0; cursor: pointer;
+      background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--c2) 60%, #fff), var(--c1)); box-shadow: 0 14px 40px color-mix(in srgb, var(--c1) 50%, transparent);
+      display: grid; place-items: center; padding: 0;
+    }
+    .chat-fab img { width: 46px; height: 46px; }
+    .chat-panel {
+      position: fixed; right: 18px; bottom: 92px; z-index: 70; width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100vh - 120px));
+      background: var(--bg-2); color: var(--text); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 30px 90px rgba(0, 0, 0, .45);
+      display: flex; flex-direction: column; overflow: hidden; animation: pop .3s ease;
+    }
+    .chat-panel[hidden] { display: none; }
+    .chat-tabs { display: flex; gap: 6px; padding: 10px; border-bottom: 1px solid var(--card-border); }
+    .chat-tabs button { flex: 1; border: 0; border-radius: 999px; padding: 9px; font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; background: transparent; color: var(--muted); }
+    .chat-tabs button.on { background: linear-gradient(90deg, var(--c1), var(--c2)); color: #fff; }
+    .chat-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .chat-hello { text-align: center; color: var(--muted); font-size: 14px; }
+    .chat-hello img { width: 72px; margin: 4px auto 6px; }
+    .msg-b { max-width: 85%; padding: 9px 12px; border-radius: 16px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; word-wrap: break-word; }
+    .msg-b.me { align-self: flex-end; background: linear-gradient(90deg, var(--c1), var(--c2)); color: #fff; }
+    .msg-b.them { align-self: flex-start; background: var(--card); border: 1px solid var(--card-border); }
+    .msg-b small { display: block; font-size: 11px; opacity: .7; font-weight: 700; }
+    .chat-sugs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .chat-sugs button { border: 1px solid var(--card-border); background: var(--card); color: var(--text); border-radius: 999px; padding: 6px 10px; font: inherit; font-size: 12.5px; cursor: pointer; }
+    .chat-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--card-border); }
+    .chat-form input, .chat-form textarea { flex: 1; border: 1px solid var(--card-border); background: var(--card); color: var(--text); border-radius: 16px; padding: 10px 12px; font: inherit; font-size: 14px; resize: none; }
+    .chat-form button { border: 0; border-radius: 50%; width: 42px; height: 42px; flex: none; cursor: pointer; background: linear-gradient(135deg, var(--c1), var(--c2)); color: #fff; }
+    .chat-note { font-size: 12px; color: var(--muted); padding: 0 14px 6px; }
+    .chat-email { margin: 0 10px; }
+    .chat-email input { width: 100%; border: 1px solid var(--card-border); background: var(--card); color: var(--text); border-radius: 12px; padding: 9px 12px; font: inherit; font-size: 14px; }
+    @media (max-width: 640px) {
+      .chat-panel { right: 8px; left: 8px; width: auto; bottom: 88px; }
+      .nav { gap: 10px; }
+      .brand svg { height: 26px; }
+      .theme-switch { margin-left: auto; }
+      .nav .btn.js-dl-open { margin-left: 0; padding: 8px 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .aurora i, .aurora, .grad-text, .btn-primary::after { animation: none; } }
+    /* Banners de anuncios: delgados, entre secciones, con su etiqueta "Publicidad". */
+    .ad-slot { width: min(970px, 100% - 32px); margin: 8px auto; padding: 8px; border-radius: 18px; text-align: center;
+      background: var(--card); border: 1px solid var(--card-border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .ad-slot::before { content: "Publicidad"; display: block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .ad-slot ins { display: block; min-height: 90px; }
+    :root[data-theme="light"] .pill { color: #A1006F; }
+    :root[data-theme="light"] .float-ia { background: rgba(255, 255, 255, .85); color: var(--text); }
+    :root[data-theme="light"] .tip { background: rgba(255, 193, 7, .14); color: #6B4E00; }
+    :root[data-theme="light"] .desktop-note { background: rgba(14, 165, 233, .1); color: #075985; }
+    :root[data-theme="light"] .tour-step li { color: #3B3650; }
+    :root[data-theme="light"] details[open] { background: rgba(255, 255, 255, .9); }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) .pill { color: #A1006F; }
+      :root:not([data-theme="dark"]) .float-ia { background: rgba(255, 255, 255, .85); color: var(--text); }
+      :root:not([data-theme="dark"]) .tip { background: rgba(255, 193, 7, .14); color: #6B4E00; }
+      :root:not([data-theme="dark"]) .desktop-note { background: rgba(14, 165, 233, .1); color: #075985; }
+      :root:not([data-theme="dark"]) .tour-step li { color: #3B3650; }
+      :root:not([data-theme="dark"]) details[open] { background: rgba(255, 255, 255, .9); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-row { animation: none; }
+      .tour-sticky .screen > * { transition: none; }
+    }
+
+    /* ---------- Tablet y teléfono ---------- */
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .lead, .dl-choices, .desktop-note { margin-inline: auto; }
+      .meta { justify-content: center; }
+      .hero-stage { height: 560px; }
+      .hero-stage .phone { width: 250px; }
+      .float-radio { width: 230px; left: 50%; margin-left: -250px; bottom: 30px; }
+      .float-ia { right: 50%; margin-right: -230px; top: 60px; width: 130px; }
+      .tour { grid-template-columns: 1fr; }
+      .tour-phone-col { display: none; }
+      .tour-steps { padding: 0; }
+      .tour-step { min-height: 0; opacity: 1; max-width: none; margin-bottom: 64px; text-align: center; }
+      .tour-step ul { justify-items: center; }
+      .tour-step .shot { display: block; margin: 26px auto 0; }
+      .tour-step .shot .phone { width: 240px; margin: 0 auto; }
+      .fan { height: 500px; --spread: 130px; }
+      .fan .phone { width: 200px; }
+      .fan .k1 { transform: translateX(-130px) rotate(-10deg) translateY(30px); }
+      .fan .k3 { transform: translateX(130px) rotate(10deg) translateY(30px); }
+      .widgets { grid-template-columns: 1fr; }
+      .widget-copy { text-align: center; }
+      .widget-copy h2 { text-align: center; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav nav { display: none; }
+      .nav .btn { margin-left: auto; }
+      .hero { padding-top: 40px; }
+      .hero-stage { height: 500px; }
+      .hero-stage .phone { width: 220px; }
+      .float-radio { width: 200px; margin-left: -180px; bottom: 10px; }
+      .float-ia { margin-right: -170px; width: 116px; padding: 10px; }
+      .float-ia img { width: 56px; }
+      .marquee-row img { width: 130px; border-radius: 18px; }
+      section { padding: 64px 0; }
+      .fan { height: 420px; --spread: 96px; }
+      .fan .phone { width: 160px; padding: 3px; }
+      .fan .k1 { transform: translateX(-96px) rotate(-10deg) translateY(24px); }
+      .fan .k3 { transform: translateX(96px) rotate(10deg) translateY(24px); }
+      .recap-pin { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+      .recap-card { scroll-snap-align: center; width: 230px; }
+      .recap-card .phone { width: 230px; }
+      .widget-stack { min-height: 440px; }
+      .widget-stack .w1 { width: 280px; }
+      .widget-stack .w2 { width: 260px; right: 50%; margin-right: -150px; }
+      .features { grid-template-columns: 1fr; }
+      .versions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="saoko-wordmark" viewBox="0 0 1961 566"><path fill-rule="evenodd" d="M274.5,559.9C267.4,558.5 254.1,552 247,546.5C243.8,544 237.1,538.3 232.4,533.9C217.4,520 207.2,513.6 188.3,506.1C174.1,500.5 157.6,496.6 132.5,493C121.2,491.3 107.4,486.7 100.4,482.2C97.2,480.1 92,475.6 88.9,472.1C78.7,460.9 74.2,448.4 72,426C69.8,402.9 66.3,389.2 57.6,370.5C51.3,357 42.1,343.5 31,331.5C15.5,314.7 10.1,305 7,287.8C4.6,275.2 8.3,257.5 15.7,245.3C17.8,241.8 22.2,236 25.6,232.3C39.1,217.2 46.4,206.3 55.2,188.1C61.9,174.3 66.2,161.4 70,143.4C74.7,121.1 81.9,107.6 95.5,95.2C110,81.9 121.1,77.3 149.8,72.4C178.5,67.5 190.1,64.2 209.5,55.1C222.6,48.9 233.2,42 248.7,29.4C268.7,13.4 281.7,7.3 298.6,6.3C319.8,5 335.2,11 355.5,28.4C385.6,54.3 413.6,66.3 453.5,70.5C473.6,72.6 481.1,74.3 490.8,79C504.6,85.7 514.5,95.4 521.5,109.2C526.5,118.8 528.8,128.5 530.1,144C531.4,161.5 533.6,175.7 536.1,182.7C540.5,195.7 551.4,212.8 563.8,226.2C579,242.8 584.5,255.5 584.3,274C584.3,282.5 583.8,286 581.7,292.5C576.7,307.7 573.1,312.4 548.4,336C532.5,351.3 521.9,367.8 516,386.5C514.4,391.7 513.6,398 512.9,411C511.6,433.6 509.9,442.5 505,452.5C499.8,463.2 493.6,470.8 484.8,477.4C470.2,488.3 457.6,492.9 430.5,497.5C392.4,503.9 376,511.1 347.6,533.8C327.7,549.7 321.1,553.7 307.5,558C299.4,560.5 282.5,561.5 274.5,559.9ZM685.5,463C655.5,460.8 634.7,457.7 607.6,451.3L596.8,448.8L597.4,443.6C597.7,440.7 599.6,422.6 601.5,403.4C603.4,384.2 606.1,358.6 607.5,346.5C608.8,334.4 610.2,321.2 610.6,317.2C611,313.3 611.5,310 611.8,310C612.1,310 615,311.7 618.4,313.9C650.1,333.9 687.2,346.9 724.2,350.9C739.7,352.6 744.4,352.4 747.6,349.7C751,346.7 751.1,342.4 747.8,339.5C745.8,337.8 742.5,337.1 729.4,335.6C667.3,328.6 634.7,313 619.6,283.1C614.2,272.5 612.6,264.2 612.7,246C612.7,231.6 613,228.3 615.3,219.9C625.4,181.8 656.1,156.3 706.1,144.5C725.9,139.9 739.4,138.6 766,138.6C797.7,138.6 826.8,141.9 859.4,149.1C871.3,151.7 898.4,159 900.1,160C901.5,160.9 901.2,164.3 894.4,220.5C889.2,263.3 887.2,279.2 886.7,279.6C886.5,279.8 883,278.5 878.9,276.6C855,265.7 820.2,258.6 783.2,257.3C768.5,256.8 766.8,256.9 765,258.5C760.4,262.6 764,270 770.5,270C777.5,270 813.8,274.1 824.2,276C850.8,281 875.6,293.4 886.9,307.2C894.2,316.2 902,334.5 902,342.7C902,345.9 903.3,345.5 904.9,341.8C907.3,336.4 919.3,324.8 927.8,319.7C947.3,307.9 973.3,302.7 1010.4,303.1C1030.1,303.4 1030.3,303.3 1032.1,301.1C1034.6,298 1034.5,295.7 1031.5,292.2C1027.6,287.6 1021.5,286.5 1000,286.6C985.6,286.6 978.6,287.1 968.5,288.9C953.6,291.5 933.9,297.7 919.7,304.3C914.4,306.8 910,308.6 910,308.2C910,307.8 908.9,291.8 907.5,272.5C906.1,253.3 905,235.5 905,232.9L905,228.4L924.2,222.2C985.5,202.5 1038.8,198.9 1080.8,211.6C1094.6,215.8 1102.5,219.3 1112,225.4C1130.9,237.6 1140.2,252.4 1142.5,273.5L1143.3,280.5L1145.5,274C1150.8,258.7 1156.2,249.9 1166.9,238.7C1187.1,217.6 1218.4,205.7 1260.7,203C1292.2,201 1325,205.9 1347.5,216C1364.2,223.5 1378.6,236.8 1386.3,251.8C1391.5,261.9 1392.6,265.1 1394.9,276.5C1396.5,284.7 1396.6,282.5 1396.2,206.5L1395.7,128L1462.9,128L1530,128L1530,135.8C1530,160.3 1527.9,241.5 1527,252.5C1525.4,271.1 1523.1,295.1 1522.5,297.8C1522.2,299 1522.4,300 1522.8,300C1523.3,300 1526.1,291.6 1528.9,281.2C1531.8,270.9 1537.7,250.1 1542.1,235C1546.5,219.9 1550.4,206.7 1550.6,205.8C1551.1,204.1 1554.9,204 1612.7,204L1674.2,204L1673.6,206.5C1673.2,207.9 1670.1,215.2 1666.6,222.8C1663.1,230.3 1660.4,236.7 1660.7,236.9C1660.9,237.2 1662.9,235.5 1665.3,233.3C1675.2,223.7 1694.2,213.6 1713,208.1C1732.2,202.3 1745.9,200.6 1772,200.6C1796.8,200.5 1806.6,201.5 1825.3,205.6C1856.4,212.4 1879.5,224.9 1893.6,242.7C1903.1,254.5 1907.3,264.7 1911.2,284.8C1913.3,295.7 1913.5,299.2 1913.5,334C1913.5,374 1913.1,378.5 1907.8,395C1895.3,434.1 1858.5,457.1 1798.5,463.1C1783.6,464.6 1745.3,463.7 1732,461.6C1706.4,457.5 1683.5,448.3 1666.8,435.3C1663.6,432.9 1661,431.1 1661,431.4C1661,431.6 1663.5,437.5 1666.5,444.5C1669.5,451.4 1672,457.5 1672,458C1672,458.6 1649.1,459 1609.7,459L1547.3,459L1540.7,432.2C1537.1,417.5 1532.1,396.7 1529.5,386C1527,375.3 1524.5,365.6 1524,364.5C1523.4,363.2 1523.1,379.9 1523.3,410.5L1523.5,458.5L1460,458.5L1396.5,458.5L1396.9,424.2C1397.1,405.4 1397.1,390 1396.8,390C1396.5,390 1395.5,393.3 1394.5,397.2C1389.6,417.9 1373.2,437.6 1352.4,447.9C1330.7,458.7 1302.9,464 1268.6,464C1224.5,464 1194.7,456.7 1170.4,439.8C1157.3,430.8 1148.6,419.7 1143.3,405.1L1140.9,398.5L1141.4,424C1141.7,438.1 1142.3,451.7 1142.6,454.3L1143.3,459L1091.4,458.8L1039.5,458.5L1038.3,448.5C1037.7,443 1037.1,435 1037.1,430.8C1037,426.5 1036.7,423 1036.2,423C1035.8,423 1034.4,425.7 1033.2,429C1026.6,446 1010.2,458.4 989.1,462.4C979.6,464.2 957.8,464.5 948.3,463C926.3,459.4 909.3,447.7 901,430.7C898.9,426.2 896.8,421.3 896.5,419.8L895.8,417L888.2,424.1C868.9,442.1 823.6,456.8 771,462.1C757,463.5 700.6,464.1 685.5,463ZM263.5,437.7C294.7,427.4 320,399.2 326.6,367.3C329.4,354.1 328.1,332.1 323.1,308C319.5,290.6 309.8,253 304.1,234.6C302.9,230.8 302,227.2 302,226.4C302,224.8 310.4,220.7 357.5,199.3C373.7,191.9 393.5,182.8 393.8,182.5C394,182.4 391.3,172.6 387.9,160.9C384.5,149.1 381.5,138.5 381.2,137.2C381,135.9 380.2,134.6 379.5,134.4C378.8,134.1 373.3,135.7 367.4,138C361.4,140.3 346.8,145.7 335,150.1C323.2,154.5 307.2,160.5 299.5,163.4C291.8,166.4 280.9,170.4 275.2,172.5C269.6,174.5 265,176.7 265,177.3C265,177.9 267.7,186.7 270.9,196.9C290.6,258.8 300,293.2 305.4,323.8C306.4,329.2 306.4,331.3 305.6,331.5C305,331.7 298.3,332.8 290.7,334C257.7,339.2 233.8,348.9 218.3,363.3C205.9,374.8 199.9,387.5 199.9,402C199.8,418.8 210,433.2 225.9,438.7C235.2,442 251.8,441.5 263.5,437.7ZM1024.6,396.9L1027.5,393.9L1027.8,376.7C1028,361 1027.9,359.2 1026.1,356.3C1021.7,349.3 1010.4,349.7 1006.8,357C1005.3,359.9 1005,363.2 1005,375.7C1005,384 1005.4,392 1005.9,393.3C1007.7,398 1010.9,400 1016.5,400C1020.9,400 1022,399.6 1024.6,396.9ZM1278.2,374.1L1281.5,371.2L1281.8,339.8C1282,322.6 1281.9,307.6 1281.6,306.4C1280.8,303.3 1276.4,299.3 1273,298.6C1268.4,297.7 1262.9,300 1260.3,303.9C1258,307.3 1258,307.6 1258,338.7L1258,370.2L1261.4,373.6C1264.4,376.6 1265.4,377 1269.9,377C1274.1,377 1275.5,376.5 1278.2,374.1ZM1778,375.5C1783.8,372.5 1784,371.1 1784,337.3C1784,308.5 1783.9,306.3 1782,303.3C1780.7,301.1 1778.9,299.8 1776.1,299C1770.9,297.6 1767.9,298.4 1764.4,302.1L1761.5,305.1L1761.2,336.3C1760.9,370.3 1761.1,371.9 1766.4,375.1C1770.2,377.4 1774.1,377.5 1778,375.5ZM1635.3,347.2C1634.8,324.2 1635.5,307.3 1637.6,289.1C1638.1,285 1637.2,286.3 1628.2,303C1622.8,313.2 1617.5,322.9 1616.5,324.6L1614.7,327.6L1620.3,339.8C1623.5,346.5 1626,352.3 1626,352.6C1626,353.4 1635.2,373 1635.6,373C1635.7,373 1635.6,361.4 1635.3,347.2ZM221.9,335.4C223.8,330.1 229.3,324.5 235.1,322L240.2,319.9L234.4,317.1C227.4,313.7 224.8,311.2 221.9,304.6L219.8,299.7L217.9,303.9C214.8,311 212.2,313.7 205.9,316.9L199.9,319.9L205,322.1C210.7,324.5 215.3,329.3 217.6,335.1C218.5,337.2 219.5,339 219.9,339C220.3,339 221.2,337.4 221.9,335.4ZM276,325.5C276,323.5 281.7,317.2 285.3,315.3L288.3,313.8L285.2,312.3C281.1,310.3 277.1,306.3 276.4,303.3C275.6,300.1 274.8,300.5 272.5,305.3C271,308.2 269.2,310 266.3,311.5C262,313.6 260.9,315 263.5,315C265.6,315 274,323.3 274,325.3C274,326.2 274.4,327 275,327C275.6,327 276,326.3 276,325.5ZM250,308.4C250,305.2 255.6,295.7 259.4,292.4C261.6,290.5 265.6,288.2 268.2,287.2C270.9,286.3 273,285.2 273,284.9C273,284.5 271.5,283.7 269.8,282.9C260.7,279.3 253.5,271.6 250.8,262.8C249.7,259.2 248,257.6 248,260.2C248,263.2 242,273.8 238.9,276.4C237,278 232.9,280.6 229.6,282.1L223.8,284.9L230.1,287.8C233.6,289.4 238,292.2 239.9,294.1C243.1,297.3 248,306.1 248,308.8C248,309.4 248.4,310 249,310C249.6,310 250,309.3 250,308.4ZM1921.7,238.6C1913.5,235.6 1908.2,229.8 1905.5,220.7C1901.9,208.2 1908.1,195.6 1920.4,190.5C1925.2,188.5 1935.6,188.4 1940.3,190.3C1945.3,192.4 1952,198.8 1954.1,203.5C1956.7,209.2 1956.6,219.1 1953.9,224.7C1948.2,236.6 1933.7,242.8 1921.7,238.6ZM1939.5,235.1C1944.3,232.9 1950.2,226.8 1952,222.3C1952.7,220.3 1953.1,216.4 1952.8,212.5C1952.5,207.3 1951.8,205.2 1949.4,201.8C1943.6,193.5 1935.4,190 1926.1,191.9C1919.3,193.3 1914.8,196.2 1911,201.9C1903,213.7 1908.1,229.3 1922,235.7C1925.9,237.5 1935,237.2 1939.5,235.1ZM1922.7,225.3C1922.3,225 1922,219.6 1922,213.3L1922,202L1928.8,202C1934.2,202 1936,202.4 1937.3,203.8C1939.9,206.7 1939.5,211.5 1936.4,213.9L1933.8,215.9L1936.9,221C1941.1,227.8 1938.3,227.8 1934,220.9C1931.3,216.7 1930.3,215.9 1928.1,216.2C1926.7,216.4 1925.5,217.2 1925.4,218C1925.3,218.8 1925.2,221 1925.2,222.8C1925,225.9 1924.1,226.8 1922.7,225.3ZM1933.8,212.4C1936.3,210.7 1936.7,206.8 1934.6,205.1C1933.8,204.4 1931.4,204 1929.3,204.2C1925.8,204.5 1925.5,204.8 1925.2,207.8C1925,209.7 1925.1,211.8 1925.4,212.6C1926.1,214.5 1931,214.4 1933.8,212.4Z"/></symbol></svg>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#" aria-label="SAOKO"><svg viewBox="0 0 1961 566" fill="currentColor" role="img" aria-hidden="true"><use href="#saoko-wordmark"/></svg></a>
+    <nav>
+      <a href="#recorrido">La app</a>
+      <a href="#karaoke">Karaoke</a>
+      <a href="#recap">Recap</a>
+      <a href="#instalar">Instalar</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <button class="theme-switch" id="themeSwitch" type="button" aria-label="Cambiar entre modo claro y oscuro">
+      <span class="icon sun">light_mode</span><span class="icon moon">dark_mode</span><span class="knob"></span>
+    </button>
+    <button class="btn btn-primary btn-small js-dl-open" type="button">
+      <span class="icon">download</span>Descargar
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ===================== PORTADA ===================== -->
+  <div class="hero">
+    <div class="glow"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill hero-in"><span class="icon">auto_awesome</span>Nuevo: Karaokes de YouTube gratis y Juego de Rachas</span>
+        <h1>
+          <span class="line"><span>Tu música,</span></span>
+          <span class="line"><span class="grad-text">a tu manera.</span></span>
+        </h1>
+        <p class="lead hero-in">Radio con locutor, una IA a la que le hablas, karaoke de cualquier canción, videos, letras en vivo y transiciones como de DJ. Todo en una app gratis para Android.</p>
+        <div class="dl-choices hero-in">
+          <a class="dl-choice dl-main js-download" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-universal.apk">
+            <span class="icon">devices</span>
+            <span class="dl-text">
+              <b>Descargar SAOKO Universal <span class="rec-badge">RECOMENDADA</span></b>
+              <small>Funciona en todos: teléfonos (Samsung incluido), tablets, TV Box, Smart TV y radios de auto. Si no sabes cuál elegir, elige esta.</small>
+            </span>
+            <span class="dl-size" id="heroSizeUni"></span>
+          </a>
+          <a class="dl-choice js-arm" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-arm64.apk">
+            <span class="icon">smartphone</span>
+            <span class="dl-text">
+              <b>Descargar SAOKO ligera</b>
+              <small>Más liviana, solo para teléfonos recientes de 64 bits. Si dice “La app no se instaló”, usa la Universal.</small>
+            </span>
+            <span class="dl-size" id="heroSizeArm"></span>
+          </a>
+        </div>
+        <div class="meta hero-in">
+          <span><span class="icon">verified</span><span id="version">Última versión</span></span>
+          <span><span class="icon">sd_card</span><span id="size">Gratis</span></span>
+          <span><span class="icon">smartphone</span>Android 8.0 o superior</span>
+        </div>
+        <div class="desktop-note" id="desktopNote">
+          <span class="icon">phone_android</span>
+          <span>SAOKO es para Android. Abre esta página desde tu teléfono para descargarla directo, o descárgala aquí y pásala al teléfono.</span>
+        </div>
+      </div>
+
+      <div class="hero-stage" aria-hidden="true">
+        <div class="phone hero-phone">
+          <div class="screen">
+            <video class="js-video" src="media/videos-inicio.mp4" poster="media/videos-inicio.jpg" muted loop playsinline preload="metadata"></video>
+          </div>
+        </div>
+        <img class="float float-radio" src="img/app/widget-radio.webp" alt="" loading="lazy">
+        <div class="float float-ia">
+          <span class="icon" style="font-size:40px;color:var(--yellow)">star</span>
+          <b>“SAOKO, pon algo para entrenar”</b>
+          <small>Y SAOKO IA lo pone.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CARRUSEL ===================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-row">
+      <img src="img/app/inicio.webp" alt="" loading="lazy"><img src="img/app/reproductor-video.webp" alt="" loading="lazy"><img src="img/app/letras.webp" alt="" loading="lazy"><img src="img/app/radio.webp" alt="" loading="lazy"><img src="img/app/karaoke-morado.webp" alt="" loading="lazy"><img src="img/app/recap-portada.webp" alt="" loading="lazy"><img src="img/app/biblioteca.webp" alt="" loading="lazy"><img src="img/app/inicio-podio.webp" alt="" loading="lazy">
+      <img src="img/app/inicio.webp" alt="" loading="lazy"><img src="img/app/reproductor-video.webp" alt="" loading="lazy"><img src="img/app/letras.webp" alt="" loading="lazy"><img src="img/app/radio.webp" alt="" loading="lazy"><img src="img/app/karaoke-morado.webp" alt="" loading="lazy"><img src="img/app/recap-portada.webp" alt="" loading="lazy"><img src="img/app/biblioteca.webp" alt="" loading="lazy"><img src="img/app/inicio-podio.webp" alt="" loading="lazy">
+    </div>
+    <div class="marquee-row rev">
+      <img src="img/app/inicio-mosaico.webp" alt="" loading="lazy"><img src="img/app/reconocer.webp" alt="" loading="lazy"><img src="img/app/karaoke-letra.webp" alt="" loading="lazy"><img src="img/app/juntos.webp" alt="" loading="lazy"><img src="img/app/recap-resumen.webp" alt="" loading="lazy"><img src="img/app/inicio-destacado.webp" alt="" loading="lazy"><img src="img/app/importar.webp" alt="" loading="lazy"><img src="img/app/radio-paises.webp" alt="" loading="lazy">
+      <img src="img/app/inicio-mosaico.webp" alt="" loading="lazy"><img src="img/app/reconocer.webp" alt="" loading="lazy"><img src="img/app/karaoke-letra.webp" alt="" loading="lazy"><img src="img/app/juntos.webp" alt="" loading="lazy"><img src="img/app/recap-resumen.webp" alt="" loading="lazy"><img src="img/app/inicio-destacado.webp" alt="" loading="lazy"><img src="img/app/importar.webp" alt="" loading="lazy"><img src="img/app/radio-paises.webp" alt="" loading="lazy">
+    </div>
+  </div>
+
+<div class="ad-slot" aria-label="Publicidad" hidden></div>
+  <!-- ===================== RECORRIDO ===================== -->
+  <section id="recorrido" data-c1="#FF00B0" data-c2="#6E64FF" data-c3="#00D1FF">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Un paseo por SAOKO</div>
+        <h2>Mucho más que un <span class="grad-text">reproductor</span></h2>
+        <p>Baja despacio: la pantalla del teléfono cambia con cada función.</p>
+      </div>
+
+      <div class="tour">
+        <div class="tour-steps">
+          <article class="tour-step" data-screen="0" data-color="#FF00B0">
+            <div class="num">01 · INICIO</div>
+            <h3>Videos que se mueven solos, como en YouTube</h3>
+            <p>Inicio te recibe con videos musicales que se reproducen en silencio. Toca uno y sigue viéndolo, con sonido, desde el mismo segundo.</p>
+            <ul>
+              <li><span class="icon">swipe</span>Desliza la fila y cada video empieza a moverse solo</li>
+              <li><span class="icon">volume_off</span>En silencio, para que sigas escuchando tu música</li>
+            </ul>
+            <div class="shot"><div class="phone"><div class="screen"><video class="js-video" src="media/videos-inicio.mp4" poster="media/videos-inicio.jpg" muted loop playsinline preload="none"></video></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="1" data-color="#B34B4B">
+            <div class="num">02 · REPRODUCTOR</div>
+            <h3>Canción o video, con un toque</h3>
+            <p>Cambia entre la portada y el video oficial sin cortar la música. En pantalla completa el video ocupa todo, sin barras.</p>
+            <ul>
+              <li><span class="icon">palette</span>El fondo toma los colores de cada portada</li>
+              <li><span class="icon">bedtime</span>Temporizador de apagado y salida a parlantes o Chromecast</li>
+            </ul>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/reproductor-video.webp" alt="Reproductor de SAOKO mostrando un video musical" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="2" data-color="#C2185B">
+            <div class="num">03 · LETRAS</div>
+            <h3>La letra avanza contigo</h3>
+            <p>Letras sincronizadas línea por línea. La que suena se ilumina y las demás se apagan, para que no te pierdas.</p>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/letras.webp" alt="Letras sincronizadas en SAOKO" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="3" data-color="#E91E63">
+            <div class="num">04 · TRANSICIONES ESTRELLAS</div>
+            <h3>Pasa de una canción a otra como un DJ</h3>
+            <p>AutoMix mezcla el final de una canción con el inicio de la siguiente, iguala el ritmo y se salta los silencios. La música nunca se detiene.</p>
+            <div class="shot"><div class="phone"><div class="screen"><video class="js-video" src="media/transiciones.mp4" poster="media/transiciones.jpg" muted loop playsinline preload="none"></video></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="4" data-color="#7C4DFF">
+            <div class="num">05 · SAOKO IA</div>
+            <h3>Háblale y te entiende</h3>
+            <p>Toca la estrella y pídele lo que quieras: “pon la de Titanic”, “sube el volumen”, “¿quién canta esto?”. Recuerda lo que le dijiste y responde preguntas como un asistente de verdad.</p>
+            <ul>
+              <li><span class="icon">graphic_eq</span>Canciones, artistas, álbumes, listas y letras con la voz</li>
+              <li><span class="icon">touch_app</span>Siempre a mano: la estrella flota sobre la app</li>
+            </ul>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/ia.webp" alt="SAOKO IA saludando en la pantalla de Inicio" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="5" data-color="#FF9F1C">
+            <div class="num">06 · PORTADAS VIVAS</div>
+            <h3>La portada cobra vida</h3>
+            <p>Mientras suena la canción, luces de colores recorren la portada al ritmo de la música.</p>
+            <div class="shot"><div class="phone"><div class="screen"><video class="js-video" src="media/portadas-vivas.mp4" poster="media/portadas-vivas.jpg" muted loop playsinline preload="none"></video></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="6" data-color="#29B6F6">
+            <div class="num">07 · RECONOCER MÚSICA</div>
+            <h3>¿Qué canción es esa?</h3>
+            <p>Acerca el teléfono a la música y SAOKO te dice qué suena. Con un toque la escuchas completa.</p>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/reconocer.webp" alt="SAOKO reconociendo una canción" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="7" data-color="#FFC400">
+            <div class="num">08 · SAOKO RADIO</div>
+            <h3>Una radio de verdad, con locutor</h3>
+            <p>Emisoras por género que suenan como en la radio: el locutor presenta y la música baja mientras habla. Además, miles de radios en vivo de Ecuador, Colombia, Perú, México, Chile y toda Latinoamérica.</p>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/radio.webp" alt="SAOKO RADIO sonando" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="8" data-color="#FF4081">
+            <div class="num">09 · ESCUCHAR JUNTOS</div>
+            <h3>La misma canción, al mismo tiempo</h3>
+            <p>Crea una sala, comparte el código y escuchen juntos aunque estén lejos. Todo va sincronizado.</p>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/juntos.webp" alt="Escuchar juntos en SAOKO" loading="lazy"></div></div></div>
+          </article>
+
+          <article class="tour-step" data-screen="9" data-color="#8E7CFF">
+            <div class="num">10 · BIBLIOTECA</div>
+            <h3>Trae tus listas y escucha sin internet</h3>
+            <p>Importa tus listas de Spotify, Apple Music, YouTube Music o Amazon Music pegando el enlace. Descarga lo que quieras y encuéntralo por artista, álbum o en tu Top 50.</p>
+            <div class="shot"><div class="phone"><div class="screen"><img src="img/app/biblioteca.webp" alt="Biblioteca de SAOKO" loading="lazy"></div></div></div>
+          </article>
+        </div>
+
+        <div class="tour-phone-col" aria-hidden="true">
+          <div class="tour-sticky">
+            <div class="tour-glow" id="tourGlow"></div>
+            <div class="phone">
+              <div class="screen" id="tourScreen">
+                <video class="on js-video" src="media/videos-inicio.mp4" poster="media/videos-inicio.jpg" muted loop playsinline preload="none"></video>
+                <img src="img/app/reproductor-video.webp" alt="" loading="lazy">
+                <img src="img/app/letras.webp" alt="" loading="lazy">
+                <video class="js-video" src="media/transiciones.mp4" poster="media/transiciones.jpg" muted loop playsinline preload="none"></video>
+                <img src="img/app/ia.webp" alt="" loading="lazy">
+                <video class="js-video" src="media/portadas-vivas.mp4" poster="media/portadas-vivas.jpg" muted loop playsinline preload="none"></video>
+                <img src="img/app/reconocer.webp" alt="" loading="lazy">
+                <img src="img/app/radio.webp" alt="" loading="lazy">
+                <img src="img/app/juntos.webp" alt="" loading="lazy">
+                <img src="img/app/biblioteca.webp" alt="" loading="lazy">
+              </div>
+            </div>
+            <div class="tour-dots" id="tourDots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== KARAOKE ===================== -->
+  <section id="karaoke" class="karaoke" data-c1="#7C3AED" data-c2="#06B6D4" data-c3="#F43F5E">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">SAOKARAOKE</div>
+        <h2>Cualquier canción, <span class="grad-text">en karaoke</span></h2>
+        <p>Elige una canción, toca la varita y SAOKO le quita la voz. La letra se ilumina palabra por palabra para que cantes a tiempo.</p>
+      </div>
+      <div class="fan">
+        <div class="phone k1"><div class="screen"><img src="img/app/karaoke-azul.webp" alt="" loading="lazy"></div></div>
+        <div class="phone k2"><div class="screen"><img src="img/app/karaoke-letra.webp" alt="Karaoke con la letra palabra por palabra" loading="lazy"></div></div>
+        <div class="phone k3"><div class="screen"><img src="img/app/karaoke-rojo.webp" alt="" loading="lazy"></div></div>
+      </div>
+      <div class="chips reveal">
+        <span class="chip"><span class="icon">auto_fix_high</span>Quita la voz con un toque</span>
+        <span class="chip"><span class="icon">lyrics</span>Letra palabra por palabra</span>
+        <span class="chip"><span class="icon">tune</span>Ajusta la sincronía</span>
+        <span class="chip"><span class="icon">palette</span>El fondo cambia con cada canción</span>
+      </div>
+    </div>
+  </section>
+
+<div class="ad-slot" aria-label="Publicidad" hidden></div>
+  <!-- ===================== RECAP ===================== -->
+  <section id="recap" class="recap" data-c1="#F97316" data-c2="#DB2777" data-c3="#FACC15">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">SAOKO Recap</div>
+        <h2>Así sonó <span class="grad-text">tu día</span></h2>
+        <p>Tus canciones y artistas más escuchados, contados como historias. Guárdalos como lista con un toque.</p>
+      </div>
+    </div>
+    <div class="recap-pin" id="recapPin">
+      <div class="recap-track" id="recapTrack">
+        <div class="recap-card"><div class="phone"><div class="screen"><img src="img/app/recap-portada.webp" alt="Portada del Recap" loading="lazy"></div></div><p>Tu Recap de SAOKO</p></div>
+        <div class="recap-card"><div class="phone"><div class="screen"><img src="img/app/recap-cancion.webp" alt="Canción más escuchada" loading="lazy"></div></div><p>Tu canción número uno</p></div>
+        <div class="recap-card"><div class="phone"><div class="screen"><img src="img/app/recap-canciones.webp" alt="Top de canciones" loading="lazy"></div></div><p>Tu top 5 de canciones</p></div>
+        <div class="recap-card"><div class="phone"><div class="screen"><img src="img/app/recap-artista.webp" alt="Artista más escuchado" loading="lazy"></div></div><p>Tu artista favorito</p></div>
+        <div class="recap-card"><div class="phone"><div class="screen"><img src="img/app/recap-resumen.webp" alt="Resumen del Recap" loading="lazy"></div></div><p>Tu resumen para compartir</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WIDGETS ===================== -->
+  <section id="widgets" data-c1="#10B981" data-c2="#3B82F6" data-c3="#A855F7">
+    <div class="wrap widgets">
+      <div class="widget-copy reveal">
+        <div class="eyebrow">Widgets</div>
+        <h2>SAOKO también vive en tu <span class="grad-text">pantalla de inicio</span></h2>
+        <p>Mira la letra que suena, pausa o cambia de canción sin abrir la app. Y cuando escuchas SAOKO RADIO, el widget se viste de radio.</p>
+      </div>
+      <div class="widget-stack">
+        <img class="w1" src="img/app/widget-letras.webp" alt="Widget de SAOKO con la letra de la canción" loading="lazy">
+        <img class="w2" src="img/app/widget-radio.webp" alt="Widget de SAOKO RADIO" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TODO LO DEMÁS ===================== -->
+  <section id="funciones" class="band" data-c1="#EC4899" data-c2="#8B5CF6" data-c3="#22D3EE">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Y todavía hay más</div>
+        <h2>Pensada para cada momento</h2>
+      </div>
+      <div class="features">
+        <article class="feature reveal"><div class="ico"><span class="icon">tv</span></div><h3>TV, auto y Chromecast</h3><p>Funciona en Smart TV, TV Box y radios Android del auto, y envía tu música a Chromecast.</p></article>
+        <article class="feature reveal"><div class="ico"><span class="icon">public</span></div><h3>Radios en vivo</h3><p>Miles de emisoras de Latinoamérica, ordenadas por país y género.</p></article>
+        <article class="feature reveal"><div class="ico"><span class="icon">brush</span></div><h3>Portadas a tu estilo</h3><p>Diseña la portada de tus listas con fuentes, filtros, figuras, marcos y stickers.</p></article>
+        <article class="feature reveal"><div class="ico"><span class="icon">volunteer_activism</span></div><h3>SAOKO Foundation</h3><p>Ayuda gratis viendo anuncios cortos: una parte va a causas sociales.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== INSTALAR ===================== -->
+  <section id="instalar" data-c1="#22C55E" data-c2="#0EA5E9" data-c3="#FF00B0">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Instalar</div>
+        <h2>Lista en un minuto</h2>
+        <p>SAOKO se descarga desde esta página. Después, la app te avisa sola cuando hay una versión nueva.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h3>Descarga SAOKO</h3><p>Desde tu teléfono toca “Descargar SAOKO”. En TV Box, Smart TV, radios de auto o Android antiguos usa “SAOKO Universal”.</p></div>
+        <div class="step reveal"><h3>Permite la instalación</h3><p>Abre el archivo. Si Android pregunta, toca “Configuración” y activa “Permitir de esta fuente” para tu navegador.</p></div>
+        <div class="step reveal"><h3>¡A escuchar!</h3><p>Toca “Instalar” y abre SAOKO. La bienvenida te guía en lo demás.</p></div>
+      </div>
+      <div class="tip reveal">
+        <span class="icon">shield</span>
+        <span>Si aparece un aviso de Play Protect, toca “Más detalles” y luego “Instalar de todas formas”. Sale con las apps que no vienen de Google Play. Descarga SAOKO <b>solo desde esta página</b> para tener la versión original.</span>
+      </div>
+      <div class="versions reveal">
+        <a class="version js-download" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-universal.apk">
+          <span class="icon">devices</span>
+          <span><b>SAOKO Universal</b><small>Android anteriores, TV Box, Smart TV, radios de auto, tablets y Samsung que no instalan la otra</small></span>
+          <span class="size" id="sizeUni"></span>
+        </a>
+        <a class="version js-arm" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-arm64.apk">
+          <span class="icon">smartphone</span>
+          <span><b>SAOKO (teléfonos recientes)</b><small>Android de 64 bits. Más liviana. Si dice “La app no se instaló”, usa la Universal</small></span>
+          <span class="size" id="sizeArm"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+<div class="ad-slot" aria-label="Publicidad" hidden></div>
+  <!-- ===================== PREGUNTAS ===================== -->
+  <section id="preguntas" data-c1="#6366F1" data-c2="#FF00B0" data-c3="#14B8A6">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Preguntas</div>
+        <h2>Preguntas frecuentes</h2>
+      </div>
+      <div class="faq">
+        <details class="reveal"><summary>¿SAOKO es gratis?<span class="icon">expand_more</span></summary><p>Sí. Puedes usar SAOKO gratis. Más adelante habrá planes opcionales con más funciones de SAOKO IA, SAOKARAOKE y Tokens.</p></details>
+        <details class="reveal"><summary>¿Es segura?<span class="icon">expand_more</span></summary><p>Sí. Cada versión está firmada por SAOKO con su propia llave: Android solo deja instalar actualizaciones firmadas por nosotros. Descárgala solo desde esta página.</p></details>
+        <details class="reveal"><summary>¿Por qué Android dice “analizar la app”?<span class="icon">expand_more</span></summary><p>Google Play Protect revisa toda app que no viene de Google Play, aunque esté firmada. Es normal: toca “Analizar app” o “Instalar de todas formas”. Sale solo la primera vez en cada versión.</p></details>
+        <details class="reveal"><summary>¿Por qué no está en Google Play?<span class="icon">expand_more</span></summary><p>Por ahora SAOKO se distribuye solo desde su página oficial. Así recibes cada mejora apenas está lista.</p></details>
+        <details class="reveal"><summary>¿Cómo se actualiza?<span class="icon">expand_more</span></summary><p>La app revisa sola si hay una versión nueva y te avisa con una notificación. Con un toque se descarga e instala encima, sin perder tu música ni tus listas.</p></details>
+        <details class="reveal"><summary>¿Qué teléfono necesito?<span class="icon">expand_more</span></summary><p>Cualquier Android 8.0 o superior. La versión recomendada sirve para casi todos los teléfonos desde 2017. Si no instala, usa la Universal.</p></details>
+        <details class="reveal"><summary>¿Funciona en TV o en el auto?<span class="icon">expand_more</span></summary><p>Sí. SAOKO se adapta a Smart TV, TV Box y radios Android del auto, se maneja con el control remoto y puede enviar tu música a un Chromecast.</p></details>
+        <details class="reveal"><summary>¿Hay versión para iPhone?<span class="icon">expand_more</span></summary><p>Todavía no. SAOKO es para Android por ahora.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="final reveal">
+        <img src="img/logo-rounded.png" alt="Logo de SAOKO">
+        <h2>Dale play a <span class="grad-text">SAOKO</span></h2>
+        <p>Gratis para Android 8.0 o superior.</p>
+        <button class="btn btn-primary js-dl-open" type="button">
+          <span class="icon">download</span>Descargar SAOKO
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a class="brand" href="#" aria-label="SAOKO"><svg viewBox="0 0 1961 566" fill="currentColor" aria-hidden="true"><use href="#saoko-wordmark"/></svg></a>
+      <p style="margin-top:10px">© 2026 SAOKO Music Project · Software libre bajo licencia GPL-3.0.</p>
+      <p>Basada en proyectos libres.</p>
+      <p>SAOKO no está afiliada a YouTube, Google ni a ninguna disquera. Las portadas que se ven en las capturas pertenecen a sus dueños.</p>
+    </div>
+    <div>
+      <p><a href="#" class="js-chat" data-tab="help">Preguntar a SAOKO Asistente</a></p>
+      <p><a href="#" class="js-chat" data-tab="support">Servicio al cliente</a></p>
+      <p><a href="privacidad.html">Política de privacidad</a></p>
+      <p><a href="terminos.html">Términos de uso</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="sheet" id="dlSheet" hidden>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="dlTitle">
+    <button class="sheet-close" type="button" data-close aria-label="Cerrar"><span class="icon">close</span></button>
+    <h3 id="dlTitle">Descargar SAOKO</h3>
+    <p class="muted">¿No sabes cuál? Elige la <b>Universal</b>: funciona en todos los aparatos.</p>
+    <a class="dl-choice dl-main js-download" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-universal.apk">
+      <span class="icon">devices</span>
+      <span class="dl-text"><b>SAOKO Universal <span class="rec-badge">RECOMENDADA</span></b><small>Todos los teléfonos (Samsung incluido), tablets, TV Box, Smart TV y radios de auto.</small></span>
+      <span class="dl-size js-size-uni"></span>
+    </a>
+    <a class="dl-choice js-arm" href="https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/SAOKO-arm64.apk">
+      <span class="icon">smartphone</span>
+      <span class="dl-text"><b>SAOKO ligera</b><small>Más liviana, solo teléfonos recientes de 64 bits. Si no se instala, usa la Universal.</small></span>
+      <span class="dl-size js-size-arm"></span>
+    </a>
+    <p class="muted" style="margin:12px 0 0;font-size:12.5px">Android 8.0 o superior. Si aparece “Instalación bloqueada” en Samsung, apaga Ajustes › Seguridad y privacidad › Auto Blocker.</p>
+  </div>
+</div>
+
+<button class="chat-fab" id="chatFab" type="button" aria-label="Abrir SAOKO Asistente y Servicio al cliente"><img src="img/saoko-star.webp" alt=""></button>
+<div class="chat-panel" id="chatPanel" hidden>
+  <div class="chat-tabs"><button type="button" data-tab="help" class="on">SAOKO Asistente</button><button type="button" data-tab="support">Servicio al cliente</button></div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-email" id="chatEmail" hidden><input type="email" id="chatEmailInput" placeholder="Tu correo (para responderte)" autocomplete="email"></div>
+  <div class="chat-note" id="chatNote"></div>
+  <form class="chat-form" id="chatForm"><textarea id="chatInput" rows="1" maxlength="1500" placeholder="Escribe tu pregunta…"></textarea><button type="submit" aria-label="Enviar"><span class="icon">send</span></button></form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  (function () {
+    // ---------- Datos de la última versión (número, peso y enlaces directos) desde GitHub ----------
+    var REPO = "saokomusic/saokomusic.github.io";
+    function mb(bytes) { return (bytes / 1048576).toFixed(0) + " MB"; }
+    fetch("https://api.github.com/repos/" + REPO + "/releases/latest")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (rel) {
+        if (!rel) return;
+        var shown = (rel.name || "").match(/\d+\.\d+\.\d+/);
+        var n = (rel.tag_name || "").split("-").pop();
+        if (shown) document.getElementById("version").textContent = "SAOKO " + shown[0];
+        else if (/^\d+$/.test(n)) document.getElementById("version").textContent = "SAOKO 1.0." + n;
+        var date = new Date(rel.published_at);
+        var assets = rel.assets || [];
+        var arm = assets.find(function (a) { return /arm64/i.test(a.name); });
+        var uni = assets.find(function (a) { return /universal/i.test(a.name); });
+        if (arm) {
+          document.querySelectorAll(".js-arm").forEach(function (a) { a.href = arm.browser_download_url; });
+          document.getElementById("sizeArm").textContent = mb(arm.size);
+          document.getElementById("heroSizeArm").textContent = mb(arm.size);
+          document.querySelectorAll(".js-size-arm").forEach(function (e) { e.textContent = mb(arm.size); });
+        }
+        if (uni) {
+          document.querySelectorAll(".js-download").forEach(function (a) { a.href = uni.browser_download_url; });
+          document.getElementById("sizeUni").textContent = mb(uni.size);
+          document.getElementById("heroSizeUni").textContent = mb(uni.size);
+          document.querySelectorAll(".js-size-uni").forEach(function (e) { e.textContent = mb(uni.size); });
+          document.getElementById("size").textContent = mb(uni.size) + " · " +
+            date.toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+        }
+      })
+      .catch(function () {});
+
+    if (!/android/i.test(navigator.userAgent)) document.getElementById("desktopNote").classList.add("show");
+
+    // ---------- Banners de anuncios (Google AdSense) ----------
+    // Se activan solos cuando los secretos ADSENSE_CLIENT y ADSENSE_SLOT están en GitHub.
+    var AD_CLIENT = "__ADSENSE_CLIENT__", AD_SLOT = "__ADSENSE_SLOT__";
+    if (/^ca-pub-\d+$/.test(AD_CLIENT) && /^\d+$/.test(AD_SLOT)) {
+      var ads = document.createElement("script");
+      ads.async = true; ads.crossOrigin = "anonymous";
+      ads.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + AD_CLIENT;
+      document.head.appendChild(ads);
+      document.querySelectorAll(".ad-slot").forEach(function (box) {
+        var ins = document.createElement("ins");
+        ins.className = "adsbygoogle";
+        ins.setAttribute("data-ad-client", AD_CLIENT);
+        ins.setAttribute("data-ad-slot", AD_SLOT);
+        ins.setAttribute("data-ad-format", "horizontal");
+        ins.setAttribute("data-full-width-responsive", "true");
+        box.appendChild(ins); box.hidden = false;
+        try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+      });
+    }
+
+    // ---------- Modo claro / oscuro (se recuerda en este navegador) ----------
+    var root = document.documentElement;
+    document.getElementById("themeSwitch").onclick = function () {
+      var dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : !matchMedia("(prefers-color-scheme: light)").matches;
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("saoko-theme", next); } catch (e) {}
+    };
+
+    // ---------- El fondo cambia de color en cada sección (como el reproductor con cada canción) ----------
+    var palette = document.querySelectorAll("section[data-c1]");
+    if ("IntersectionObserver" in window) {
+      var cio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          ["c1", "c2", "c3"].forEach(function (k) { root.style.setProperty("--" + k, e.target.getAttribute("data-" + k)); });
+        });
+      }, { rootMargin: "-45% 0px -45% 0px" });
+      palette.forEach(function (s) { cio.observe(s); });
+    }
+
+    // ---------- Descargar: siempre se muestran los dos APK con la recomendación ----------
+    var sheet = document.getElementById("dlSheet");
+    document.querySelectorAll(".js-dl-open").forEach(function (b) { b.onclick = function () { sheet.hidden = false; }; });
+    sheet.onclick = function (e) { if (e.target === sheet || e.target.closest("[data-close]")) sheet.hidden = true; };
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") sheet.hidden = true; });
+
+    // ---------- SAOKO Asistente y Servicio al cliente ----------
+    var API = "https://vzgpgvxjppfhrvdxwrvp.supabase.co/functions/v1/", KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6Z3BndnhqcHBmaHJ2ZHh3cnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxMTcwMTEsImV4cCI6MjEwODY5MzAxMX0.r6-gqhFfqeXkBgRQpqoJzv9zXYagfIIfaeMbiCbRFMY";
+    var fab = document.getElementById("chatFab"), panel = document.getElementById("chatPanel"), body = document.getElementById("chatBody");
+    var form = document.getElementById("chatForm"), input = document.getElementById("chatInput"), note = document.getElementById("chatNote");
+    var emailBox = document.getElementById("chatEmail"), emailInput = document.getElementById("chatEmailInput");
+    var tab = "help", helpHistory = [], supTimer = null;
+    function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+    function call(fn, data) {
+      return fetch(API + fn, { method: "POST", headers: { "content-type": "application/json", apikey: KEY, authorization: "Bearer " + KEY }, body: JSON.stringify(data) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.message || "Error"); return j; }); });
+    }
+    function bubble(text, mine, label) {
+      var d = document.createElement("div");
+      d.className = "msg-b " + (mine ? "me" : "them");
+      if (label) { var s = document.createElement("small"); s.textContent = label; d.appendChild(s); }
+      d.appendChild(document.createTextNode(text));
+      body.appendChild(d); body.scrollTop = body.scrollHeight;
+      return d;
+    }
+    function hello() {
+      body.innerHTML = "";
+      var h = document.createElement("div"); h.className = "chat-hello";
+      if (tab === "help") {
+        h.innerHTML = '<img src="img/saoko-star.webp" alt=""><div>¡Hola! Soy <b>SAOKO Asistente</b>. Pregúntame lo que quieras sobre SAOKO.</div>';
+        body.appendChild(h);
+        var s = document.createElement("div"); s.className = "chat-sugs";
+        ["¿Cómo instalo SAOKO?", "¿Qué incluye cada plan?", "¿Cómo gano Tokens gratis?", "¿Cómo uso SAOKARAOKE?"].forEach(function (q) {
+          var b = document.createElement("button"); b.type = "button"; b.textContent = q; b.onclick = function () { ask(q); }; s.appendChild(b);
+        });
+        body.appendChild(s);
+        helpHistory.forEach(function (t) { bubble(t.text, t.role === "user"); });
+        note.textContent = ""; emailBox.hidden = true; input.placeholder = "Escribe tu pregunta…";
+      } else {
+        h.innerHTML = "<div><b>Servicio al cliente</b><br>Una persona del equipo de SAOKO te responde aquí en menos de 24 horas. Mientras, puedes consultar a SAOKO Asistente.</div>";
+        body.appendChild(h);
+        emailBox.hidden = !!store("saoko-support");
+        input.placeholder = "Escribe tu mensaje…"; note.textContent = "";
+        loadSupport();
+      }
+    }
+    function setTab(t) {
+      tab = t;
+      panel.querySelectorAll(".chat-tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === t); });
+      clearInterval(supTimer);
+      if (t === "support") supTimer = setInterval(loadSupport, 30000);
+      hello();
+    }
+    function open(t) { panel.hidden = false; setTab(t || tab); input.focus(); }
+    fab.onclick = function () { if (panel.hidden) open(); else { panel.hidden = true; clearInterval(supTimer); } };
+    panel.querySelectorAll(".chat-tabs button").forEach(function (b) { b.onclick = function () { setTab(b.getAttribute("data-tab")); }; });
+    document.querySelectorAll(".js-chat").forEach(function (a) { a.onclick = function (e) { e.preventDefault(); open(a.getAttribute("data-tab")); }; });
+    function ask(q) {
+      if (!q.trim()) return;
+      var hist = helpHistory.slice(-10);
+      helpHistory.push({ role: "user", text: q.trim() });
+      bubble(q.trim(), true);
+      var wait = bubble("…", false);
+      call("help", { text: q.trim(), history: hist, lang: (navigator.language || "es").slice(0, 2) }).then(function (r) {
+        wait.lastChild.textContent = r.answer;
+        helpHistory.push({ role: "assistant", text: r.answer });
+        if (r.support) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "btn btn-ghost btn-small"; b.style.alignSelf = "flex-start";
+          b.textContent = "Hablar con una persona"; b.onclick = function () { setTab("support"); }; body.appendChild(b);
+        }
+      }).catch(function (e) { wait.lastChild.textContent = e.message || "No pude responder ahora. Intenta otra vez."; });
+    }
+    var shown = 0;
+    function loadSupport() {
+      var token = store("saoko-support");
+      if (!token || tab !== "support") return;
+      call("support", { action: "list", token: token }).then(function (r) { render(r.messages); })
+        .catch(function () {});
+    }
+    function render(msgs) {
+      if (tab !== "support") return;
+      body.querySelectorAll(".msg-b").forEach(function (n) { n.remove(); });
+      msgs.forEach(function (m) { bubble(m.body, !m.from_admin, m.from_admin ? "Equipo SAOKO" : null); });
+      shown = msgs.length;
+    }
+    function sendSupport(text) {
+      var token = store("saoko-support");
+      var req = token ? call("support", { action: "send", token: token, body: text })
+        : call("support", { action: "open", source: "web", body: text, email: emailInput.value.trim() });
+      note.textContent = "Enviando…";
+      return req.then(function (r) {
+        if (r.token) { store("saoko-support", r.token); emailBox.hidden = true; }
+        note.textContent = "Enviado. Te respondemos aquí en menos de 24 horas (vuelve a abrir este chat).";
+        render(r.messages || []);
+      }).catch(function (e) { note.textContent = e.message; });
+    }
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      var text = input.value.trim();
+      if (!text) return;
+      if (tab === "support" && !store("saoko-support") && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailInput.value.trim())) { note.textContent = "Escribe tu correo para poder responderte."; emailInput.focus(); return; }
+      input.value = "";
+      if (tab === "help") ask(text); else sendSupport(text);
+    };
+    input.onkeydown = function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } };
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // ---------- Los videos solo se reproducen cuando se ven (ahorra batería y datos) ----------
+    var videos = document.querySelectorAll(".js-video");
+    function playIfVisible(v, visible) {
+      if (visible && !reduce) { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    }
+    if ("IntersectionObserver" in window) {
+      var vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var v = e.target;
+          // En el recorrido solo suena el video de la pantalla activa.
+          if (v.closest("#tourScreen") && !v.classList.contains("on")) { v.pause(); return; }
+          playIfVisible(v, e.isIntersecting);
+        });
+      }, { threshold: 0.25 });
+      videos.forEach(function (v) { vio.observe(v); });
+    }
+
+    // ---------- Recorrido: cambia la pantalla del teléfono según el paso que se lee ----------
+    var steps = document.querySelectorAll(".tour-step");
+    var screens = document.querySelectorAll("#tourScreen > *");
+    var dots = document.querySelectorAll("#tourDots i");
+    var glow = document.getElementById("tourGlow");
+    var current = -1;
+    function show(i) {
+      if (i === current) return;
+      current = i;
+      steps.forEach(function (s, k) { s.classList.toggle("active", k === i); });
+      dots.forEach(function (d, k) { d.classList.toggle("on", k === i); });
+      var target = parseInt(steps[i].getAttribute("data-screen"), 10);
+      screens.forEach(function (s, k) {
+        var on = k === target;
+        s.classList.toggle("on", on);
+        if (s.tagName === "VIDEO") {
+          if (on && !reduce) { s.preload = "auto"; s.currentTime = 0; var p = s.play(); if (p && p.catch) p.catch(function () {}); }
+          else s.pause();
+        }
+      });
+      glow.style.background = steps[i].getAttribute("data-color");
+    }
+
+    var hasGsap = window.gsap && window.ScrollTrigger;
+    if (hasGsap) {
+      gsap.registerPlugin(ScrollTrigger);
+      steps.forEach(function (s, i) {
+        ScrollTrigger.create({
+          trigger: s, start: "top 55%", end: "bottom 55%",
+          onToggle: function (self) { if (self.isActive) show(i); }
+        });
+      });
+    } else if ("IntersectionObserver" in window) {
+      var sio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) show([].indexOf.call(steps, e.target)); });
+      }, { rootMargin: "-45% 0px -45% 0px" });
+      steps.forEach(function (s) { sio.observe(s); });
+    }
+    show(0);
+
+    // ---------- Animaciones (si GSAP no carga, todo se ve igual, solo sin movimiento) ----------
+    if (!hasGsap || reduce) return;
+
+    // Portada: el título sube línea por línea, luego el resto.
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.from("h1 .line > span", { yPercent: 110, duration: .9, stagger: .12 })
+      .from(".hero-in", { y: 24, opacity: 0, duration: .7, stagger: .08 }, "-=.5")
+      .from(".hero-phone", { y: 80, rotate: 6, opacity: 0, duration: 1 }, "-=.9")
+      .from(".float-radio", { x: -60, opacity: 0, duration: .8 }, "-=.6")
+      .from(".float-ia", { x: 60, opacity: 0, duration: .8 }, "-=.7");
+
+    // Parallax suave de la portada al bajar.
+    gsap.to(".hero-phone", { y: -60, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".float-radio", { y: -130, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".float-ia", { y: -170, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+
+    // Títulos y tarjetas aparecen al llegar.
+    gsap.utils.toArray(".reveal").forEach(function (el) {
+      gsap.from(el, { y: 30, opacity: 0, duration: .8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%", once: true } });
+    });
+
+    // Karaoke: los teléfonos se abren en abanico.
+    var spread = function () { return parseFloat(getComputedStyle(document.querySelector(".fan")).getPropertyValue("--spread")) || 250; };
+    var fanST = function () { return { trigger: ".fan", start: "top 85%", end: "center 55%", scrub: true, invalidateOnRefresh: true }; };
+    gsap.fromTo(".fan .k1", { x: 0, y: 0, rotate: 0 }, { x: function () { return -spread(); }, y: 30, rotate: -10, ease: "none", scrollTrigger: fanST() });
+    gsap.fromTo(".fan .k3", { x: 0, y: 0, rotate: 0 }, { x: function () { return spread(); }, y: 30, rotate: 10, ease: "none", scrollTrigger: fanST() });
+    gsap.fromTo(".fan .k2", { scale: .85 }, { scale: 1, ease: "none", scrollTrigger: fanST() });
+
+    // Widgets.
+    gsap.from(".widget-stack .w1", { y: 80, rotate: -4, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".widget-stack", start: "top 80%", once: true } });
+    gsap.from(".widget-stack .w2", { y: 120, x: 40, opacity: 0, duration: 1, delay: .15, ease: "power3.out", scrollTrigger: { trigger: ".widget-stack", start: "top 80%", once: true } });
+
+    // Recap: en computadora la fila avanza de lado mientras bajas (en el teléfono se desliza con el dedo).
+    ScrollTrigger.matchMedia({
+      "(min-width: 641px)": function () {
+        var track = document.getElementById("recapTrack");
+        var dist = function () { return Math.max(0, track.scrollWidth - window.innerWidth); };
+        if (dist() < 40) return;
+        gsap.to(track, {
+          x: function () { return -dist(); }, ease: "none",
+          scrollTrigger: { trigger: "#recapPin", start: "center center", end: function () { return "+=" + dist(); }, pin: true, scrub: 1, invalidateOnRefresh: true }
+        });
+      }
+    });
+  })();
+</script>
+<!-- ===================== DETECTOR DE BLOQUEADORES DE ANUNCIOS =====================
+     SAOKO es gratis gracias a los anuncios. Si el navegador (extensión, Brave, Opera…) o el
+     teléfono (apps como AdGuard, Blokada o un "DNS privado" que bloquea anuncios) los bloquea,
+     la página queda tapada hasta que se desactive. Revisa 3 cosas:
+       1) Un "cebo": una caja con nombres de anuncio. Las extensiones la esconden.
+       2) Pedir el archivo de anuncios de Google. Las apps y DNS bloqueadores lo cortan.
+       3) Un control (un archivo de esta misma web): si TAMPOCO carga, es tu internet, no un
+          bloqueador, y no se tapa nada. -->
+<div id="adblock-wall" role="dialog" aria-modal="true" aria-labelledby="abw-title" hidden>
+  <div class="abw-card">
+    <svg class="abw-logo" viewBox="0 0 1961 566" fill="currentColor" aria-hidden="true"><use href="#saoko-wordmark"/></svg>
+    <div class="abw-icon"><span class="icon">block</span></div>
+    <h2 id="abw-title">Desactiva tu bloqueador de anuncios</h2>
+    <p>SAOKO es <b>gratis</b> gracias a los anuncios. Para ver la página, desactiva el bloqueador para <b>saokomusic.github.io</b> y toca el botón de abajo.</p>
+    <details open>
+      <summary>En la computadora</summary>
+      <ul>
+        <li><b>Extensión</b> (AdBlock, uBlock, AdGuard…): toca su ícono arriba a la derecha → <i>Pausar en este sitio</i>.</li>
+        <li><b>Brave</b>: toca el león de la barra de direcciones → apaga los <i>Escudos</i>.</li>
+        <li><b>Opera / Edge</b>: el escudo de la barra de direcciones → desactiva el bloqueo para este sitio.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>En el celular</summary>
+      <ul>
+        <li><b>Apps bloqueadoras</b> (AdGuard, Blokada, AdAway, DNS66…): ábrela y pausa la protección, o agrega <b>saokomusic.github.io</b> a la lista permitida.</li>
+        <li><b>DNS privado</b>: Ajustes → Conexiones/Red → <i>DNS privado</i> → elige <i>Automático</i> (si pusiste uno como dns.adguard.com).</li>
+        <li><b>Samsung Internet</b>: menú → <i>Bloqueadores de anuncios</i> → desactívalos.</li>
+        <li><b>Brave / Opera / Firefox</b>: el escudo junto a la dirección → apágalo para este sitio.</li>
+      </ul>
+    </details>
+    <button class="btn btn-primary" type="button" id="abw-retry"><span class="icon">refresh</span>Ya lo desactivé</button>
+  </div>
+</div>
+<style>
+  #adblock-wall { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; overflow-y: auto;
+    background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+  #adblock-wall[hidden] { display: none; }
+  html.adblocked, html.adblocked body { overflow: hidden !important; }
+  .abw-card { width: min(520px, 100%); padding: 28px 24px; border-radius: 28px; text-align: center; color: var(--text);
+    background: var(--bg-2, #15121F); border: 1px solid var(--card-border, rgba(255,255,255,.12)); box-shadow: 0 40px 120px rgba(0,0,0,.5); }
+  .abw-logo { height: 34px; width: auto; display: block; margin: 0 auto 18px; }
+  .abw-icon { width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center;
+    background: linear-gradient(135deg, #FF00B0, #8E5BFF); color: #fff; }
+  .abw-icon .icon { font-size: 34px; }
+  .abw-card h2 { font-size: 24px; margin: 0 0 10px; }
+  .abw-card p { color: var(--muted); line-height: 1.55; margin: 0 0 16px; }
+  .abw-card details { text-align: left; margin: 0 0 10px; padding: 12px 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--card-border, rgba(255,255,255,.1)); }
+  .abw-card summary { cursor: pointer; font-weight: 700; }
+  .abw-card ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.55; font-size: 14px; }
+  .abw-card .btn { width: 100%; justify-content: center; margin-top: 8px; }
+</style>
+<script>
+  (function () {
+    var wall = document.getElementById("adblock-wall");
+    function ping(url) {
+      return fetch(url, { method: "GET", mode: "no-cors", cache: "no-store", credentials: "omit" })
+        .then(function () { return true; }, function () { return false; });
+    }
+    function bait() {
+      return new Promise(function (resolve) {
+        var b = document.createElement("div");
+        b.className = "adsbox ad-banner ad-placeholder adsbygoogle pub_300x250 text-ad textAd banner_ad sponsored-ad";
+        b.setAttribute("aria-hidden", "true");
+        b.style.cssText = "position:absolute;left:-9999px;top:-9999px;width:300px;height:250px;";
+        b.innerHTML = "&nbsp;";
+        document.body.appendChild(b);
+        setTimeout(function () {
+          var cs = getComputedStyle(b);
+          var hidden = !b.isConnected || b.offsetHeight === 0 || b.offsetParent === null || cs.display === "none" || cs.visibility === "hidden";
+          if (b.parentNode) b.parentNode.removeChild(b);
+          resolve(hidden);
+        }, 250);
+      });
+    }
+    function check() {
+      return Promise.all([
+        bait(),
+        ping("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?_=" + Date.now()),
+        ping("https://googleads.g.doubleclick.net/pagead/id?_=" + Date.now()),
+        ping("img/favicon.svg?_=" + Date.now()),
+      ]).then(function (r) {
+        var cosmetic = r[0], adsOk = r[1] && r[2], controlOk = r[3];
+        // Sin internet (el control tampoco cargó): no se tapa nada.
+        return cosmetic || (controlOk && !adsOk);
+      });
+    }
+    function show(blocked) {
+      wall.hidden = !blocked;
+      document.documentElement.classList.toggle("adblocked", blocked);
+      // Mientras está tapada, nada detrás se puede tocar ni leer con el teclado.
+      var main = document.querySelector("main");
+      if (main) { if (blocked) main.setAttribute("inert", ""); else main.removeAttribute("inert"); }
+    }
+    if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
+      var ds = wall.querySelectorAll("details"); ds[0].open = false; ds[1].open = true;
+    }
+    if (navigator.webdriver) return; // revisores automáticos (p. ej. el de Google) ven la página normal
+    window.addEventListener("load", function () { check().then(show); });
+    document.getElementById("abw-retry").addEventListener("click", function () {
+      var btn = this; btn.disabled = true;
+      check().then(function (blocked) {
+        btn.disabled = false;
+        if (blocked) { btn.animate([{ transform: "translateX(0)" }, { transform: "translateX(-8px)" }, { transform: "translateX(8px)" }, { transform: "translateX(0)" }], { duration: 300 }); }
+        else location.reload();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
