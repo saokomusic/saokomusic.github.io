@@ -1,0 +1,7 @@
+# app-ads.txt de SAOKO
+# Dice qué redes de anuncios están autorizadas a vender los anuncios de SAOKO.
+# OJO: AppLovin solo lo lee en la RAÍZ de un dominio (https://saoko.app/app-ads.txt).
+# Aquí (https://saokomusic.github.io/) todavía no cuenta: se activa
+# cuando la web tenga dominio propio. Entonces copia aquí la línea que te da AppLovin
+# (MAX → Account → app-ads.txt), por ejemplo:
+#   applovin.com, TU_ID_DE_APPLOVIN, DIRECT

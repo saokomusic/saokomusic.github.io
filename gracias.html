@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAOKO · Gracias</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="img/saoko-icon.svg?v=3"><link rel="icon" type="image/png" href="img/saoko-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0B0A12; --muted: #A8A4BF; --gradient: linear-gradient(90deg, #FF00B0, #A6A3FF); color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box;
+      background: radial-gradient(80% 60% at 50% 0%, rgba(255, 0, 176, .25), transparent 70%), var(--bg);
+      color: #fff; font-family: "Plus Jakarta Sans", system-ui, sans-serif; text-align: center; }
+    .card { max-width: 420px; }
+    img { width: 92px; height: 92px; border-radius: 26px; box-shadow: 0 14px 40px rgba(255, 0, 176, .4); }
+    h1 { font-size: 30px; margin: 22px 0 10px; }
+    p { color: var(--muted); margin: 0 0 26px; line-height: 1.55; }
+    a { display: inline-block; padding: 15px 30px; border-radius: 999px; background: var(--gradient); color: #fff; font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="img/logo.png" alt="SAOKO">
+    <h1 id="title">¡Gracias por apoyar SAOKO!</h1>
+    <p id="text">Tu pago se está procesando. En unos segundos verás tu plan o tus Tokens en la app.</p>
+    <a id="back" href="saoko://premium">Volver a SAOKO</a>
+  </div>
+  <script>
+    if (new URLSearchParams(location.search).has("cancelado")) {
+      document.getElementById("title").textContent = "Pago cancelado";
+      document.getElementById("text").textContent = "No se cobró nada. Puedes volver a la app e intentarlo cuando quieras.";
+      document.getElementById("back").href = "saoko://premium?cancelado=1";
+    }
+  </script>
+</body>
+</html>

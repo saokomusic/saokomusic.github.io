@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="es" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="google" content="notranslate">
+  <title>SAOKO · Panel</title>
+  <link rel="icon" type="image/svg+xml" href="../img/saoko-icon.svg?v=3"><link rel="icon" type="image/png" href="../img/saoko-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0B0A12; --card: #15121F; --line: rgba(255,255,255,.09); --muted: #A8A4BF; --pink: #FF2D9B; --violet: #9B7BFF; --ok: #4ADE80; --bad: #F87171; color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(60% 40% at 10% 0%, rgba(255,0,176,.16), transparent 70%), var(--bg); color: #fff; font-family: "Plus Jakarta Sans", system-ui, sans-serif; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 18px 16px 60px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; }
+    .brand img { width: 34px; height: 34px; border-radius: 10px; }
+    .tag { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: var(--pink); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+    h2 { margin: 0 0 12px; font-size: 18px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+    input, select, textarea { width: 100%; background: #0E0C16; color: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font: inherit; }
+    textarea { min-height: 80px; resize: vertical; }
+    button { border: 0; border-radius: 999px; padding: 11px 18px; font: inherit; font-weight: 700; cursor: pointer; color: #fff; background: linear-gradient(90deg, #FF00B0, #9B7BFF); }
+    button.ghost { background: transparent; border: 1px solid var(--line); }
+    button.danger { background: #3a1420; color: #FFB4C2; }
+    button:disabled { opacity: .5; cursor: default; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+    .row > * { flex: 1 1 160px; }
+    .row > button { flex: 0 0 auto; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .stat { background: #0E0C16; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .stat b { display: block; font-size: 26px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+    .msg { margin-top: 10px; font-size: 14px; min-height: 20px; }
+    .msg.ok { color: var(--ok); } .msg.bad { color: var(--bad); }
+    .user { background: #0E0C16; border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-top: 12px; font-size: 14px; line-height: 1.6; }
+    .muted { color: var(--muted); }
+    ul.list { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+    ul.list li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+    #login { max-width: 380px; margin: 12vh auto 0; }
+    .hidden { display: none !important; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+    .chip { background: #0E0C16; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: #fff; }
+    .chip.on { background: linear-gradient(90deg, #FF00B0, #9B7BFF); border-color: transparent; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+    th { text-align: left; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tr.u:hover { background: rgba(255,255,255,.04); cursor: pointer; }
+    .rec { display: flex; gap: 10px; align-items: center; }
+    .rec img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex: none; }
+    .rec .txt { flex: 1; min-width: 0; }
+    .rec button { padding: 6px 12px; font-size: 13px; flex: none; }
+    .preview { margin-top: 8px; max-width: 100%; max-height: 160px; border-radius: 12px; display: block; }
+    .switch { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 14px; color: #fff; cursor: pointer; }
+    .switch input { width: 18px; height: 18px; flex: none; }
+    .pager { display: flex; align-items: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 13px; }
+    .stat { cursor: pointer; transition: transform .15s, border-color .15s; }
+    .stat:hover { transform: translateY(-2px); border-color: rgba(255,45,155,.5); }
+    .stat.alert b { color: var(--pink); }
+    .dots { background: transparent; border: 1px solid var(--line); padding: 2px 10px; font-size: 16px; line-height: 1; }
+    .menu { position: fixed; z-index: 60; background: #1C1828; border: 1px solid var(--line); border-radius: 14px; padding: 6px; min-width: 240px; box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+    .menu button { display: block; width: 100%; text-align: left; background: transparent; border-radius: 10px; padding: 9px 12px; font-weight: 600; font-size: 14px; }
+    .menu button:hover { background: rgba(255,255,255,.07); }
+    .menu button.red { color: #FFB4C2; }
+    .modal { position: fixed; inset: 0; z-index: 50; background: rgba(5,4,10,.72); display: grid; place-items: center; padding: 16px; }
+    .modal .box { background: var(--card); border: 1px solid var(--line); border-radius: 20px; width: min(980px, 100%); max-height: 86vh; overflow: auto; padding: 18px; }
+    .modal .head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .badge { display: inline-block; min-width: 20px; padding: 1px 7px; border-radius: 999px; background: var(--pink); color: #fff; font-size: 12px; font-weight: 800; text-align: center; }
+    .chat { display: grid; grid-template-columns: 300px 1fr; gap: 12px; min-height: 360px; }
+    @media (max-width: 720px) { .chat { grid-template-columns: 1fr; } }
+    .threads { border: 1px solid var(--line); border-radius: 14px; overflow: auto; max-height: 460px; }
+    .thread { padding: 10px 12px; border-bottom: 1px solid var(--line); cursor: pointer; font-size: 13px; }
+    .thread.on, .thread:hover { background: rgba(255,255,255,.05); }
+    .msgs { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow: auto; }
+    .bubble { max-width: 80%; padding: 9px 12px; border-radius: 14px; font-size: 14px; white-space: pre-wrap; word-wrap: break-word; }
+    .bubble.me { align-self: flex-end; background: linear-gradient(90deg, #C2008A, #7B5BFF); }
+    .bubble.them { align-self: flex-start; background: #0E0C16; border: 1px solid var(--line); }
+    .bubble small { display: block; opacity: .6; font-size: 11px; margin-top: 3px; }
+    .bubble a { color: #4DA3FF; text-decoration: underline; }
+    .bubble .quote { border-left: 3px solid rgba(255,255,255,.5); background: rgba(0,0,0,.2); border-radius: 8px; padding: 4px 8px; margin-bottom: 6px; font-size: 12px; opacity: .85; }
+    .bubble .del { font-style: italic; opacity: .6; }
+    .bubble img.att { display: block; max-width: 220px; max-height: 220px; border-radius: 10px; margin-bottom: 6px; cursor: zoom-in; }
+    .bubble .file { display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,.2); border-radius: 10px; padding: 8px; margin-bottom: 6px; }
+    .bubble .acts { display: flex; gap: 10px; margin-top: 4px; font-size: 11px; }
+    .bubble .acts a { color: inherit; opacity: .75; cursor: pointer; text-decoration: none; }
+    .devbox { font-size: 12.5px; background: #0E0C16; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; }
+    .warnbox { color: #FFB4D8; font-weight: 700; }
+    #supReplying { font-size: 12px; margin-top: 8px; }
+    .qr { background: #fff; border-radius: 14px; padding: 10px; width: 200px; height: 200px; margin: 10px auto; display: block; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="../img/logo.png" alt="">SAOKO <span class="tag">PANEL</span></div>
+    <a href="studio.html" class="ghost" style="text-decoration:none;padding:8px 14px;border-radius:12px;margin-left:auto" title="Mockups 3D de teléfonos">📱 SAOKO Studio</a>
+    <button id="logout" class="ghost hidden">Cerrar sesión</button>
+  </header>
+
+  <!-- Inicio de sesión: con tu cuenta SAOKO (la que marcaste como Master). -->
+  <section id="login" class="card">
+    <h2>Entrar</h2>
+    <label>Correo</label><input id="email" type="email" autocomplete="username">
+    <label>Contraseña</label><input id="password" type="password" autocomplete="current-password">
+    <div style="margin-top:14px"><button id="signin">Entrar</button></div>
+    <div id="loginMsg" class="msg"></div>
+  </section>
+
+  <!-- Segundo paso: código de 6 dígitos de la app Autenticador (Google Authenticator, Authy…). -->
+  <section id="mfa" class="card hidden" style="max-width:420px;margin:10vh auto 0">
+    <h2>Verificación en dos pasos</h2>
+    <div id="mfaEnroll" class="hidden">
+      <p class="muted" style="font-size:14px;margin:0">Protege el panel: escanea este código con Google Authenticator (o Authy) en TU teléfono. Desde ahora, además de la contraseña, el panel pedirá el código de 6 dígitos que muestra esa app.</p>
+      <img id="mfaQr" class="qr" alt="Código QR">
+      <p class="muted" style="font-size:12px;text-align:center;word-break:break-all;margin:0">Si no puedes escanear, escribe esta clave: <b id="mfaSecret"></b></p>
+    </div>
+    <p id="mfaAsk" class="muted hidden" style="font-size:14px;margin:0">Abre tu app Autenticador y escribe el código de SAOKO.</p>
+    <label>Código de 6 dígitos</label><input id="mfaCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+    <div style="margin-top:14px" class="row"><button id="mfaGo">Verificar</button><button id="mfaOut" class="ghost">Salir</button></div>
+    <div id="mfaMsg" class="msg"></div>
+  </section>
+
+  <main id="app" class="hidden">
+    <div id="serverMsg" class="card hidden" style="border-color:#7a2433;color:#FFB4C2"></div>
+    <section class="card">
+      <h2>Resumen <span class="muted" style="font-size:13px;font-weight:400">· toca un recuadro para ver el detalle</span></h2>
+      <div class="stats" id="stats"></div>
+      <div class="row" style="margin-top:12px"><button id="cleanup" class="ghost">🧹 Limpiar cuentas e instalaciones que ya no existen</button></div>
+    </section>
+
+    <section class="card">
+      <h2>SAOKO Chat <span class="muted" style="font-size:13px">(chat público · MAYA)</span></h2>
+      <div class="row"><button id="chatLoad" class="ghost">Actualizar</button></div>
+      <div id="chatList" class="msgs" style="max-height:340px;margin-top:8px"></div>
+      <h3 style="margin-top:14px;font-size:15px">Faltas de MAYA (3 en 24 h = 24 h sin chat)</h3>
+      <div id="chatStrikes" class="muted" style="font-size:13px"></div>
+    </section>
+
+    <section class="card">
+      <h2>Servicio al cliente <span id="supBadge" class="badge hidden"></span></h2>
+      <div class="chips" id="supFilter"><span class="chip on" data-s="open">Abiertas</span><span class="chip" data-s="closed">Cerradas</span><span class="chip" data-s="all">Todas</span></div>
+      <div class="chat">
+        <div class="threads" id="threads"></div>
+        <div>
+          <div id="supHead" class="muted" style="font-size:13px;margin-bottom:8px">Elige una conversación.</div>
+          <div class="msgs" id="msgs"></div>
+          <div id="supReplying" class="muted hidden"></div>
+          <textarea id="supReply" placeholder="Escribe tu respuesta…" style="margin-top:8px"></textarea>
+          <div class="row" style="margin-top:8px">
+            <button id="supSend">Responder</button>
+            <button id="supAttach" class="ghost" title="Mandar un archivo (captura, PDF…)">📎 Archivo</button>
+            <button id="supApk" class="ghost" title="Mandar el APK de SAOKO">🤖 Enviar APK</button>
+            <button id="supClose" class="ghost">Cerrar conversación</button>
+          </div>
+          <input id="supFile" type="file" class="hidden" accept="image/png,image/jpeg,image/webp,application/pdf,text/plain,.doc,.docx">
+          <div id="supMsg" class="msg"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Bloqueos y baneos</h2>
+      <p class="muted" style="font-size:13px;margin:0 0 8px">Teléfonos bloqueados (no pueden usar SAOKO aunque reinstalen) y correos baneados o suspendidos (con otro correo pueden usar SAOKO, sin el plan de esta cuenta). Se bloquea desde los 3 puntitos ⋯ de cada fila.</p>
+      <ul class="list" id="blocks"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Instalaciones (todos, con o sin cuenta)</h2>
+      <div class="chips" id="countries"></div>
+      <div class="chips" id="kinds">
+        <span class="chip on" data-k="all">Todas</span><span class="chip" data-k="anon">Sin cuenta</span><span class="chip" data-k="account">Con cuenta</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Instalación</th><th>País</th><th>Cuenta</th><th>App</th><th>Teléfono</th><th>Última vez</th><th>Aperturas</th><th>Instalada</th><th></th></tr></thead>
+          <tbody id="installs"></tbody>
+        </table>
+      </div>
+      <div class="pager"><button id="iprev" class="ghost">Anterior</button><span id="ipageInfo"></span><button id="inext" class="ghost">Siguiente</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Usuarios con cuenta</h2>
+      <div class="row">
+        <div><label>Buscar por correo o nombre</label><input id="qUsers" placeholder="Escribe y pulsa Enter"></div>
+        <button id="qGo">Buscar</button>
+      </div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table>
+          <thead><tr><th>Usuario</th><th>País</th><th>Plan</th><th>App</th><th>Teléfono</th><th>Última vez</th><th>Aperturas</th><th>Creada</th><th></th></tr></thead>
+          <tbody id="users"></tbody>
+        </table>
+      </div>
+      <div class="pager"><button id="prev" class="ghost">Anterior</button><span id="pageInfo"></span><button id="next" class="ghost">Siguiente</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Buscar una cuenta</h2>
+      <div class="row">
+        <div><label>Correo</label><input id="uEmail" type="email" placeholder="persona@correo.com"></div>
+        <button id="find">Buscar</button>
+      </div>
+      <div id="user" class="user hidden"></div>
+      <div id="userTools" class="hidden">
+        <div class="row" style="margin-top:12px">
+          <div><label>Regalar plan</label>
+            <select id="plan">
+              <option value="ESSENTIAL">Individual</option><option value="BASIC">Básico</option><option value="STUDENT">Estudiante</option>
+              <option value="DUO">Dúo</option><option value="FAMILY">Familiar</option><option value="BUSINESS">Empresa</option>
+            </select></div>
+          <div><label>Días</label><input id="days" type="number" min="1" max="3650" value="30"></div>
+          <button id="gift">Regalar</button>
+          <button id="revoke" class="danger">Quitar regalos</button>
+        </div>
+        <div class="row">
+          <div><label>Tokens</label><input id="tokens" type="number" min="1" value="50"></div>
+          <button id="giveTokens">Dar tokens</button>
+          <button id="takeTokens" class="danger">Quitar tokens</button>
+        </div>
+        <div class="row">
+          <button id="free" class="ghost">Liberar sus teléfonos (mes gratis)</button>
+          <button id="toThis" class="ghost">🎁 Enviar regalo, premio o cupón solo a esta cuenta</button>
+        </div>
+        <div class="row">
+          <div><label>Motivo (lo verá la persona)</label><input id="banReason" maxlength="300" placeholder="Ej.: uso indebido de la cuenta"></div>
+          <div><label>Días (vacío = para siempre)</label><input id="banDays" type="number" min="1" max="3650" placeholder="Para siempre"></div>
+          <button id="ban" class="danger">Banear / suspender correo</button>
+          <button id="unban" class="ghost">Quitar baneo</button>
+          <button id="delAcc" class="danger">Eliminar cuenta</button>
+        </div>
+      </div>
+      <div id="userMsg" class="msg"></div>
+    </section>
+
+    <div class="grid2">
+      <section class="card">
+        <h2>Notificaciones y banners</h2>
+        <label>Tipo</label>
+        <select id="nKind">
+          <option value="news">📰 Novedades (en silencio + banner cada 5 entradas)</option>
+          <option value="image">🖼️ Banner con imagen (solo al entrar, sin notificación, como Spotify)</option>
+          <option value="gift">🎁 Regalo o premio (a una cuenta)</option>
+          <option value="coupon">🏷️ Cupón de regalo (a una cuenta)</option>
+          <option value="offer">💸 Oferta (en silencio + banner cada 5 entradas)</option>
+          <option value="server">⚠️ Aviso del servidor (caídas, mantenimiento)</option>
+          <option value="future">🚀 Mejoras que vienen</option>
+          <option value="update">⬆️ Actualización (con sonido)</option>
+        </select>
+        <label>Solo para esta cuenta (correo; vacío = para todos)</label><input id="nTarget" type="email" placeholder="persona@correo.com">
+        <div id="nCouponBox" class="hidden"><label>Código del cupón</label><input id="nCoupon" maxlength="40" placeholder="SAOKO-REGALO"></div>
+        <label>Título (máx. 80)</label><input id="nTitle" maxlength="80">
+        <label>Texto (máx. 400; opcional en un banner con imagen)</label><textarea id="nBody" maxlength="400"></textarea>
+        <label>Al tocarla abre (opcional)</label><input id="nAction" placeholder="saoko_premium, update, karaoke… o https://">
+        <label>Imagen (opcional, máx. 3 MB) · Tamaño ideal: <b>1080 × 1350 px</b> (vertical 4:5)</label><input id="nImage" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+        <div id="nSize" class="msg"></div>
+        <img id="nPreview" class="preview hidden" alt="">
+        <label>Días que dura</label><input id="nDays" type="number" min="1" max="60" value="7">
+        <div style="margin-top:14px"><button id="send">Enviar</button></div>
+        <div id="nMsg" class="msg"></div>
+      </section>
+      <section class="card">
+        <h2>Oferta</h2>
+        <label>Descuento (%)</label><input id="oPct" type="number" min="1" max="90" value="5">
+        <label>Empieza</label><input id="oStart" type="datetime-local">
+        <label>Termina</label><input id="oEnd" type="datetime-local">
+        <div style="margin-top:14px"><button id="offer">Crear oferta</button></div>
+        <label class="switch"><input type="checkbox" id="monthly"> Oferta automática del día 15 (5 %, del 15 al 17 de cada mes)</label>
+        <div id="oMsg" class="msg"></div>
+        <h2 style="margin-top:22px">Recientes</h2>
+        <p class="muted" style="margin:0 0 6px;font-size:13px">Con 🗑 se borra: deja de salir en la app y la notificación se quita de los teléfonos.</p>
+        <ul class="list" id="recent"></ul>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box"><div class="head"><h2 id="mTitle" style="margin:0"></h2><button class="ghost" id="mClose">Cerrar</button></div><div class="table-wrap" id="mBody"></div></div></div>
+<div id="menu" class="menu hidden"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+  // La web se publica con estos dos valores (los mismos que ya lleva la app; no son secretos).
+  // La seguridad está en la base de datos: cada acción comprueba que tu cuenta sea Master.
+  var sb = supabase.createClient("https://vzgpgvxjppfhrvdxwrvp.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6Z3BndnhqcHBmaHJ2ZHh3cnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxMTcwMTEsImV4cCI6MjEwODY5MzAxMX0.r6-gqhFfqeXkBgRQpqoJzv9zXYagfIIfaeMbiCbRFMY");
+  var $ = function (id) { return document.getElementById(id); };
+  function say(id, text, ok) { var m = $(id); m.textContent = text; m.className = "msg " + (ok ? "ok" : "bad"); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function day(d) { return d ? new Date(d).toLocaleString("es") : "—"; }
+  async function rpc(name, args) {
+    var r = await sb.rpc(name, args || {});
+    if (r.error) {
+      if (r.error.message === "mfa_required") { show(); throw new Error("Falta la verificación en dos pasos."); }
+      throw new Error(r.error.message === "forbidden" ? "Esta cuenta no es Master." : r.error.message);
+    }
+    return r.data;
+  }
+
+  async function show() {
+    var s = (await sb.auth.getSession()).data.session;
+    if (!s) { $("login").classList.remove("hidden"); $("app").classList.add("hidden"); $("logout").classList.add("hidden"); return; }
+    var admin = false;
+    try { admin = await rpc("is_admin"); } catch (e) {}
+    if (!admin) { await sb.auth.signOut(); say("loginMsg", "Esta cuenta no es Master.", false); return show(); }
+    // Segundo paso obligatorio: sin el código del Autenticador no se ve nada.
+    var aal = (await sb.auth.mfa.getAuthenticatorAssuranceLevel()).data;
+    if (!aal || aal.currentLevel !== "aal2") { $("login").classList.add("hidden"); return startMfa(); }
+    $("mfa").classList.add("hidden");
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden"); $("logout").classList.remove("hidden");
+    [loadOverview, loadRecent, loadCountries, loadUsers, loadInstalls, loadThreads, loadBlocks].forEach(function (f) {
+      f().catch(function (e) { serverProblem("No se pudo cargar una sección: " + e.message); });
+    });
+  }
+
+  function serverProblem(text) {
+    var box = $("serverMsg");
+    if (box.textContent.indexOf(text) === -1) box.innerHTML += "<p style=\"margin:4px 0\">⚠️ " + esc(text) + "</p>";
+    box.classList.remove("hidden");
+  }
+
+  // ---- Instalaciones (con o sin cuenta) ----
+  var ipage = 0, kind = "all";
+  async function loadInstalls() {
+    var r = await rpc("admin_installs", { p_kind: kind, p_country: country, p_limit: PAGE, p_offset: ipage * PAGE });
+    $("installs").innerHTML = r.rows.map(function (i) {
+      return '<tr class="i"' + (i.email ? ' data-e="' + esc(i.email) + '"' : "") + "><td><code>" + esc(i.install_id.slice(0, 8)) + "</code>" + (i.official === false ? ' <span class="muted">(no oficial)</span>' : "") + "</td>" +
+        "<td>" + flag(i.country) + " " + esc(i.country || "") + '<br><span class="muted">' + esc(i.language || "") + "</span></td>" +
+        "<td>" + (i.email ? esc(i.email) : '<span class="muted">Sin cuenta</span>') + "</td>" +
+        "<td>" + esc(i.app_version || "—") + '<br><span class="muted">Android ' + esc(i.android_version || "—") + "</span></td>" +
+        "<td>" + esc(i.device_model || "—") + "</td>" +
+        "<td>" + ago(i.last_seen_at) + "</td>" +
+        "<td>" + esc(i.opens) + "</td>" +
+        "<td>" + new Date(i.first_seen_at).toLocaleDateString("es") + "</td>" +
+        '<td><button class="dots" data-i="' + esc(i.install_id) + '" data-e="' + esc(i.email || "") + '" data-m="' + esc(i.device_model || "") + '">⋯</button></td></tr>';
+    }).join("") || '<tr><td colspan="9" class="muted">Sin resultados.</td></tr>';
+    Array.prototype.forEach.call($("installs").querySelectorAll(".dots"), function (b) {
+      b.onclick = function (ev) { ev.stopPropagation(); installMenu(b); };
+    });
+    var from = r.total ? ipage * PAGE + 1 : 0, to = Math.min(r.total, (ipage + 1) * PAGE);
+    $("ipageInfo").textContent = from + "–" + to + " de " + r.total;
+    $("iprev").disabled = ipage === 0;
+    $("inext").disabled = to >= r.total;
+    Array.prototype.forEach.call($("installs").querySelectorAll("tr.i[data-e]"), function (tr) {
+      tr.style.cursor = "pointer";
+      tr.onclick = function () { $("uEmail").value = tr.getAttribute("data-e"); find(); $("uEmail").scrollIntoView({ behavior: "smooth", block: "center" }); };
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("#kinds .chip"), function (el) {
+    el.onclick = function () {
+      kind = el.getAttribute("data-k"); ipage = 0;
+      Array.prototype.forEach.call(document.querySelectorAll("#kinds .chip"), function (x) { x.classList.toggle("on", x === el); });
+      loadInstalls();
+    };
+  });
+  $("iprev").onclick = function () { if (ipage > 0) { ipage--; loadInstalls(); } };
+  $("inext").onclick = function () { ipage++; loadInstalls(); };
+
+  // ---- Lista de usuarios ----
+  var PAGE = 50, page = 0, country = "";
+  function flag(cc) {
+    if (!cc || cc.length !== 2 || cc === "??") return "🌐";
+    return String.fromCodePoint(127397 + cc.charCodeAt(0), 127397 + cc.charCodeAt(1));
+  }
+  function countryName(cc) {
+    try { return new Intl.DisplayNames(["es"], { type: "region" }).of(cc); } catch (e) { return cc; }
+  }
+  function ago(d) {
+    if (!d) return "—";
+    var s = (Date.now() - new Date(d)) / 1000;
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + " min";
+    if (s < 86400) return Math.round(s / 3600) + " h";
+    return Math.round(s / 86400) + " d";
+  }
+  async function loadCountries() {
+    var list = await rpc("admin_countries");
+    var html = '<span class="chip ' + (country === "" ? "on" : "") + '" data-c="">Todos</span>';
+    html += list.map(function (c) {
+      var name = c.country === "??" ? "Sin país" : countryName(c.country);
+      return '<span class="chip ' + (country === c.country ? "on" : "") + '" data-c="' + esc(c.country) + '" title="' + esc(c.anon) + ' sin cuenta · ' + esc(c.users) + ' con cuenta">' +
+        flag(c.country) + " " + esc(name) + " · " + esc(c.installs || c.users) + "</span>";
+    }).join("");
+    $("countries").innerHTML = html;
+    Array.prototype.forEach.call($("countries").querySelectorAll(".chip"), function (el) {
+      el.onclick = function () { country = el.getAttribute("data-c"); if (country === "??") country = ""; page = 0; ipage = 0; loadCountries(); loadUsers(); loadInstalls(); };
+    });
+  }
+  async function loadUsers() {
+    var r = await rpc("admin_users", { p_search: $("qUsers").value.trim(), p_country: country, p_limit: PAGE, p_offset: page * PAGE });
+    $("users").innerHTML = r.rows.map(function (u) {
+      var plan = u.plan ? esc(u.plan.plan) + ' <span class="muted">' + esc(u.plan.status) + "</span>" : '<span class="muted">Gratis</span>';
+      return '<tr class="u" data-e="' + esc(u.email) + '"><td><b>' + esc(u.display_name || "") + "</b><br><span class=\"muted\">" + esc(u.email) + "</span></td>" +
+        "<td>" + flag(u.country) + " " + esc(u.country || "") + '<br><span class="muted">' + esc(u.language || "") + "</span></td>" +
+        "<td>" + plan + "</td>" +
+        "<td>" + esc(u.app_version || "—") + '<br><span class="muted">Android ' + esc(u.android_version || "—") + "</span></td>" +
+        "<td>" + esc(u.device_model || "—") + "</td>" +
+        "<td>" + ago(u.last_seen_at) + "</td>" +
+        "<td>" + esc(u.opens || 0) + "</td>" +
+        "<td>" + new Date(u.created_at).toLocaleDateString("es") + "</td>" +
+        '<td><button class="dots" data-u="' + esc(u.id) + '" data-e="' + esc(u.email) + '">⋯</button></td></tr>';
+    }).join("") || '<tr><td colspan="9" class="muted">Sin resultados.</td></tr>';
+    Array.prototype.forEach.call($("users").querySelectorAll(".dots"), function (b) {
+      b.onclick = function (ev) { ev.stopPropagation(); userMenu(b); };
+    });
+    var from = r.total ? page * PAGE + 1 : 0, to = Math.min(r.total, (page + 1) * PAGE);
+    $("pageInfo").textContent = from + "–" + to + " de " + r.total;
+    $("prev").disabled = page === 0;
+    $("next").disabled = to >= r.total;
+    Array.prototype.forEach.call($("users").querySelectorAll("tr.u"), function (tr) {
+      tr.onclick = function () { $("uEmail").value = tr.getAttribute("data-e"); find(); $("uEmail").scrollIntoView({ behavior: "smooth", block: "center" }); };
+    });
+  }
+  $("qGo").onclick = function () { page = 0; loadUsers(); };
+  $("qUsers").onkeydown = function (e) { if (e.key === "Enter") { page = 0; loadUsers(); } };
+  $("prev").onclick = function () { if (page > 0) { page--; loadUsers(); } };
+  $("next").onclick = function () { page++; loadUsers(); };
+
+  async function loadOverview() {
+    var o = await rpc("admin_overview");
+    var items = [["installs", "Instalaciones"], ["installs_anon", "Sin cuenta"], ["installs_active_1d", "Abrieron hoy"], ["installs_active_7d", "Abrieron (7 días)"],
+      ["installs_new_7d", "Instalaciones nuevas (7 días)"], ["users", "Cuentas"], ["active_1d", "Activos hoy"], ["active_7d", "Activos (7 días)"], ["users_7d", "Nuevas (7 días)"], ["countries", "Países"],
+      ["paying", "Pagando"], ["trials", "En prueba"], ["gifted", "Con regalo"], ["devices_used", "Teléfonos con prueba"],
+      ["gifts", "Regalos y cupones enviados"], ["support", "Mensajes sin responder"], ["blocked", "Bloqueados"]];
+    // Un dato que el servidor no manda = falta aplicar una actualización de la base de datos.
+    var missing = items.filter(function (i) { return o[i[0]] === undefined; }).length;
+    $("stats").innerHTML = items.map(function (i) {
+      var alert = (i[0] === "support" && o.support > 0) ? " alert" : "";
+      return '<div class="stat' + alert + '" data-k="' + i[0] + '" data-t="' + esc(i[1]) + '"><b>' + (o[i[0]] === undefined ? "—" : esc(o[i[0]])) + "</b><span>" + i[1] + "</span></div>";
+    }).join("");
+    Array.prototype.forEach.call($("stats").querySelectorAll(".stat"), function (el) {
+      el.onclick = function () { statDetail(el.getAttribute("data-k"), el.getAttribute("data-t")); };
+    });
+    if (o.support > 0) { $("supBadge").textContent = o.support; $("supBadge").classList.remove("hidden"); } else $("supBadge").classList.add("hidden");
+    if (missing) serverProblem("Al servidor le faltan actualizaciones de la base de datos (" + missing + " datos sin calcular). Ejecuta el workflow “Servidor de cuentas (Supabase)” y revisa que termine en verde.");
+  }
+
+  var KIND = { update: "Actualización", news: "Novedades", offer: "Oferta", gift: "Regalo", coupon: "Cupón", image: "Banner con imagen", server: "Aviso del servidor", future: "Mejoras que vienen" };
+  async function loadRecent() {
+    var r = await rpc("admin_recent");
+    $("monthly").checked = r.monthly_offer_on !== false;
+    var a = r.announcements.map(function (x) {
+      return '<li class="rec">' + (x.image_url ? '<img src="' + esc(x.image_url) + '" alt="">' : "") +
+        '<div class="txt"><b>' + esc(x.title) + '</b><br><span class="muted">' + esc(KIND[x.kind] || x.kind) + (x.target_email ? " · solo para " + esc(x.target_email) : " · para todos") + (x.coupon_code ? " · cupón " + esc(x.coupon_code) : "") + " · hasta " + day(x.ends_at) + "</span></div>" +
+        '<button class="danger" data-del-a="' + esc(x.id) + '">🗑 Borrar</button></li>';
+    });
+    var o = r.offers.map(function (x) {
+      return '<li class="rec"><div class="txt"><b>' + esc(x.percent) + '% de descuento</b><br><span class="muted">' + day(x.starts_at) + " → " + day(x.ends_at) + "</span></div>" +
+        '<button class="danger" data-del-o="' + esc(x.id) + '">🗑 Borrar</button></li>';
+    });
+    $("recent").innerHTML = (a.concat(o).join("")) || '<li class="muted">Nada todavía.</li>';
+    Array.prototype.forEach.call($("recent").querySelectorAll("button"), function (btn) {
+      btn.onclick = async function () {
+        var isA = btn.hasAttribute("data-del-a");
+        if (!confirm(isA ? "¿Borrar este aviso? Se quitará también de los teléfonos." : "¿Borrar esta oferta?")) return;
+        btn.disabled = true;
+        try {
+          if (isA) await rpc("admin_delete_announcement", { p_id: parseInt(btn.getAttribute("data-del-a"), 10) });
+          else await rpc("admin_delete_offer", { p_id: parseInt(btn.getAttribute("data-del-o"), 10) });
+          var p = await push();
+          say("oMsg", "Borrado." + p, true);
+          loadRecent();
+        } catch (e) { say("oMsg", e.message, false); btn.disabled = false; }
+      };
+    });
+  }
+
+  // Avisa a todos los teléfonos al instante (aunque la app esté cerrada). Sin Firebase
+  // configurado igual llega: cada teléfono revisa por su cuenta cada pocas horas.
+  // Aviso a UN teléfono / cuenta: desbloqueo, fin del baneo o respuesta de soporte.
+  async function pushOne(body) {
+    try {
+      var r = await sb.functions.invoke("push", { body: body });
+      if (r.error || (r.data && r.data.error)) return " (sin Firebase: lo verá al abrir SAOKO)";
+      return r.data && r.data.sent ? " Se le avisó con una notificación." : " (ese teléfono aún no tiene avisos activados: lo verá al abrir SAOKO)";
+    } catch (e) { return ""; }
+  }
+  async function push() {
+    try {
+      var r = await sb.functions.invoke("push", { body: {} });
+      if (r.error) return " (no se pudo avisar al instante; llegará en unas horas)";
+      if (r.data && r.data.error === "not_configured") return " (llegará en unas horas: falta configurar Firebase para que sea al instante)";
+      return " Avisado a todos los teléfonos al instante.";
+    } catch (e) { return ""; }
+  }
+
+  $("monthly").onchange = async function () {
+    var box = this, on = box.checked;
+    try { await rpc("admin_set_monthly_offer", { p_on: on }); say("oMsg", on ? "Oferta del día 15 encendida." : "Oferta del día 15 apagada.", true); }
+    catch (e) { say("oMsg", e.message, false); box.checked = !on; }
+  };
+
+  $("nImage").onchange = function () {
+    var f = this.files[0];
+    if (!f) { $("nPreview").classList.add("hidden"); return; }
+    if (f.size > 3 * 1048576) { say("nMsg", "La imagen pesa más de 3 MB.", false); this.value = ""; $("nPreview").classList.add("hidden"); return; }
+    $("nPreview").src = URL.createObjectURL(f); $("nPreview").classList.remove("hidden");
+    // Detector de medidas: la app la muestra en 4:5 (1080 × 1350). Si no coincide, se avisa.
+    var probe = new Image();
+    probe.onload = function () {
+      var w = probe.naturalWidth, h = probe.naturalHeight, ratio = w / h, ideal = 1080 / 1350;
+      if (Math.abs(ratio - ideal) > 0.03) say("nSize", "⚠️ Tu imagen mide " + w + " × " + h + " px. La app la recorta a vertical 4:5: usa 1080 × 1350 px para que se vea completa.", false);
+      else if (w < 1080) say("nSize", "⚠️ Medidas correctas (4:5) pero pequeña (" + w + " × " + h + "). Usa 1080 × 1350 px para que se vea nítida.", false);
+      else say("nSize", "✅ Medidas perfectas: " + w + " × " + h + " px.", true);
+    };
+    probe.src = $("nPreview").src;
+  };
+
+  async function uploadImage() {
+    var f = $("nImage").files[0];
+    if (!f) return null;
+    var ext = (f.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+    var path = Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + ext;
+    var up = await sb.storage.from("announcements").upload(path, f, { contentType: f.type, upsert: false });
+    if (up.error) throw new Error("No se pudo subir la imagen: " + up.error.message);
+    return sb.storage.from("announcements").getPublicUrl(path).data.publicUrl;
+  }
+
+  async function find() {
+    var email = $("uEmail").value.trim();
+    if (!email) return;
+    try {
+      var u = await rpc("admin_find_user", { p_email: email });
+      if (!u) { $("user").classList.add("hidden"); $("userTools").classList.add("hidden"); return say("userMsg", "No existe una cuenta con ese correo.", false); }
+      var subs = (u.subscriptions || []).map(function (s) { return esc(s.plan) + " · " + esc(s.status) + " · " + esc(s.provider) + " · hasta " + day(s.until); }).join("<br>") || "Sin planes";
+      $("user").innerHTML = "<b>" + esc(u.name || "") + "</b> · " + esc(u.email) + '<br><span class="muted">Creada: ' + day(u.created_at) + " · Último ingreso: " + day(u.last_sign_in_at) +
+        "</span><br>Tokens: <b>" + esc(u.tokens) + "</b> · Teléfonos con prueba: <b>" + esc(u.devices) + "</b> · Prueba: " + esc(u.trial_state || "sin usar") + "<br>" + subs;
+      $("user").classList.remove("hidden"); $("userTools").classList.remove("hidden");
+      say("userMsg", "", true);
+    } catch (e) { say("userMsg", e.message, false); }
+  }
+
+  async function act(btn, fn, okText) {
+    btn.disabled = true;
+    try { var r = await fn(); say("userMsg", okText(r), true); await find(); loadOverview(); }
+    catch (e) { say("userMsg", e.message, false); }
+    btn.disabled = false;
+  }
+
+  $("signin").onclick = async function () {
+    var r = await sb.auth.signInWithPassword({ email: $("email").value.trim(), password: $("password").value });
+    if (r.error) return say("loginMsg", "Correo o contraseña incorrectos.", false);
+    show();
+  };
+  $("logout").onclick = async function () { await sb.auth.signOut(); show(); };
+  $("find").onclick = find;
+  $("uEmail").onkeydown = function (e) { if (e.key === "Enter") find(); };
+  $("gift").onclick = function () {
+    act(this, function () { return rpc("admin_gift_plan", { p_email: $("uEmail").value, p_plan: $("plan").value, p_days: parseInt($("days").value, 10) }); },
+      function (r) { return "Plan regalado hasta " + day(r.until) + "."; });
+  };
+  $("revoke").onclick = function () {
+    if (!confirm("¿Quitar los planes regalados de esta cuenta?")) return;
+    act(this, function () { return rpc("admin_revoke_gifts", { p_email: $("uEmail").value }); }, function (n) { return n + " regalo(s) quitado(s)."; });
+  };
+  $("giveTokens").onclick = function () {
+    var n = Math.abs(parseInt($("tokens").value, 10));
+    act(this, function () { return rpc("admin_gift_tokens", { p_email: $("uEmail").value, p_amount: n }); }, function (t) { return "Ahora tiene " + t + " tokens."; });
+  };
+  $("takeTokens").onclick = function () {
+    var n = Math.abs(parseInt($("tokens").value, 10));
+    if (!confirm("¿Quitar " + n + " tokens a esta cuenta?")) return;
+    act(this, function () { return rpc("admin_take_tokens", { p_email: $("uEmail").value, p_amount: n }); }, function (t) { return "Listo: ahora tiene " + t + " tokens."; });
+  };
+  $("free").onclick = function () {
+    act(this, function () { return rpc("admin_free_devices", { p_email: $("uEmail").value }); }, function (n) { return n + " teléfono(s) liberado(s): podrán recibir el mes gratis otra vez."; });
+  };
+  $("send").onclick = async function () {
+    // Se revisa aquí (con un mensaje claro) lo mismo que exige la base de datos.
+    var title = $("nTitle").value.trim(), body = $("nBody").value.trim(), k = $("nKind").value;
+    var target = $("nTarget").value.trim(), coupon = $("nCoupon").value.trim();
+    if (k === "image" && !$("nImage").files[0]) return say("nMsg", "Elige la imagen del banner.", false);
+    if (k === "image" && !title) title = "-";
+    if ((k === "gift" || k === "coupon") && !target) return say("nMsg", "Escribe el correo de la cuenta que recibe el regalo.", false);
+    if (k === "coupon" && !coupon) return say("nMsg", "Escribe el código del cupón.", false);
+    if (!title) return say("nMsg", "Escribe un título.", false);
+    if (!body && k !== "image") return say("nMsg", "Escribe el texto de la notificación (lo que se lee debajo del título).", false);
+    if (title.length > 80) return say("nMsg", "El título es muy largo (máximo 80 letras).", false);
+    if (body.length > 400) return say("nMsg", "El texto es muy largo (máximo 400 letras).", false);
+    this.disabled = true;
+    try {
+      var image = await uploadImage();
+      await rpc("admin_announce", { p_kind: k, p_title: title, p_body: body, p_action: $("nAction").value.trim(), p_days: parseInt($("nDays").value, 10), p_image: image,
+        p_target_email: target || null, p_coupon: coupon || null });
+      var p = await push();
+      say("nMsg", (target ? "Enviada solo a " + target + "." : "Enviada a todos.") + p, true);
+      $("nTitle").value = ""; $("nBody").value = ""; $("nImage").value = ""; $("nCoupon").value = ""; $("nTarget").value = ""; $("nPreview").classList.add("hidden"); loadRecent(); loadOverview();
+    } catch (e) { say("nMsg", e.message, false); }
+    this.disabled = false;
+  };
+  $("offer").onclick = async function () {
+    this.disabled = true;
+    try {
+      if (!$("oStart").value || !$("oEnd").value) throw new Error("Elige las dos fechas.");
+      var pct = parseInt($("oPct").value, 10);
+      if (!(pct >= 1 && pct <= 90)) throw new Error("El descuento debe ser de 1 a 90 %.");
+      if (new Date($("oEnd").value) <= new Date($("oStart").value)) throw new Error("La fecha de fin debe ser después de la de inicio.");
+      await rpc("admin_offer", { p_percent: parseInt($("oPct").value, 10), p_starts: new Date($("oStart").value).toISOString(), p_ends: new Date($("oEnd").value).toISOString() });
+      var p = new Date($("oStart").value) <= new Date() ? await push() : "";
+      say("oMsg", "Oferta creada." + p, true); loadRecent();
+    } catch (e) { say("oMsg", e.message, false); }
+    this.disabled = false;
+  };
+  // ---------- Verificación en dos pasos ----------
+  var mfaFactor = null, mfaChallenge = null;
+  async function startMfa() {
+    $("app").classList.add("hidden"); $("mfa").classList.remove("hidden"); $("logout").classList.remove("hidden");
+    var f = (await sb.auth.mfa.listFactors()).data;
+    var totp = f && f.totp && f.totp.filter(function (x) { return x.status === "verified"; })[0];
+    if (totp) {
+      mfaFactor = totp.id; $("mfaEnroll").classList.add("hidden"); $("mfaAsk").classList.remove("hidden");
+    } else {
+      // Primera vez: se registra el Autenticador del dueño.
+      (f && f.all || []).filter(function (x) { return x.status !== "verified"; }).forEach(function (x) { sb.auth.mfa.unenroll({ factorId: x.id }); });
+      var en = await sb.auth.mfa.enroll({ factorType: "totp", friendlyName: "SAOKO Panel " + Date.now() });
+      if (en.error) return say("mfaMsg", en.error.message, false);
+      mfaFactor = en.data.id; $("mfaQr").src = en.data.totp.qr_code; $("mfaSecret").textContent = en.data.totp.secret;
+      $("mfaEnroll").classList.remove("hidden"); $("mfaAsk").classList.add("hidden");
+    }
+    $("mfaCode").focus();
+  }
+  $("mfaGo").onclick = async function () {
+    var code = $("mfaCode").value.replace(/\D/g, "");
+    if (code.length !== 6) return say("mfaMsg", "Escribe los 6 números.", false);
+    var ch = await sb.auth.mfa.challenge({ factorId: mfaFactor });
+    if (ch.error) return say("mfaMsg", ch.error.message, false);
+    var v = await sb.auth.mfa.verify({ factorId: mfaFactor, challengeId: ch.data.id, code: code });
+    if (v.error) return say("mfaMsg", "Código incorrecto o vencido. Prueba con el siguiente.", false);
+    $("mfaCode").value = ""; show();
+  };
+  $("mfaCode").onkeydown = function (e) { if (e.key === "Enter") $("mfaGo").click(); };
+  $("mfaOut").onclick = async function () { await sb.auth.signOut(); $("mfa").classList.add("hidden"); show(); };
+  // Sesión inactiva 30 minutos: se cierra sola.
+  var idle = Date.now();
+  ["click", "keydown", "mousemove", "touchstart"].forEach(function (ev) { document.addEventListener(ev, function () { idle = Date.now(); }, { passive: true }); });
+  setInterval(async function () { if (Date.now() - idle > 30 * 60000 && (await sb.auth.getSession()).data.session) { await sb.auth.signOut(); show(); } }, 60000);
+
+  // ---------- Detalle de cada recuadro ----------
+  var COLS = { email: "Cuenta", name: "Nombre", country: "País", plan: "Plan", status: "Estado", provider: "Origen", until: "Hasta (cuenta regresiva)",
+    since: "Desde", last_seen: "Última vez", device: "Teléfono", app: "App", android: "Android", opens: "Aperturas", install_id: "Instalación",
+    installs: "Instalaciones", with_account: "Con cuenta", active_7d: "Activos 7 días", kind: "Tipo", title: "Título", coupon_code: "Cupón", created_at: "Enviado",
+    account_email: "Cuenta", last_body: "Último mensaje", unread_admin: "Sin leer" };
+  function countdown(d) {
+    var s = (new Date(d) - Date.now()) / 1000;
+    if (s <= 0) return "vencido";
+    var dd = Math.floor(s / 86400), hh = Math.floor(s % 86400 / 3600);
+    return dd + " d " + hh + " h";
+  }
+  function cell(k, v) {
+    if (v == null || v === "") return '<span class="muted">—</span>';
+    if (k === "country") return flag(v) + " " + esc(v === "??" ? "Sin país" : countryName(v));
+    if (k === "until") return day(v) + ' <span class="muted">(' + countdown(v) + ")</span>";
+    if (k === "since" || k === "created_at") return day(v);
+    if (k === "last_seen") return ago(v);
+    if (k === "install_id") return "<code>" + esc(String(v).slice(0, 8)) + "</code>";
+    return esc(v);
+  }
+  async function statDetail(key, title) {
+    if (key === "blocked") return $("blocks").scrollIntoView({ behavior: "smooth" });
+    $("mTitle").textContent = title; $("mBody").innerHTML = '<p class="muted">Cargando…</p>'; $("modal").classList.remove("hidden");
+    try {
+      var rows = await rpc("admin_stat_detail", { p_key: key });
+      if (!rows.length) { $("mBody").innerHTML = '<p class="muted">No hay nada aquí todavía.</p>'; return; }
+      var keys = Object.keys(rows[0]).filter(function (k) { return k !== "id" && k !== "last_from_admin" && k !== "source"; });
+      $("mBody").innerHTML = "<table><thead><tr>" + keys.map(function (k) { return "<th>" + esc(COLS[k] || k) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+        rows.map(function (r) { return '<tr class="u" data-e="' + esc(r.email || r.account_email || "") + '">' + keys.map(function (k) { return "<td>" + cell(k, r[k]) + "</td>"; }).join("") + "</tr>"; }).join("") +
+        "</tbody></table>";
+      Array.prototype.forEach.call($("mBody").querySelectorAll("tr.u"), function (tr) {
+        var e = tr.getAttribute("data-e"); if (!e) return;
+        tr.onclick = function () { $("modal").classList.add("hidden"); $("uEmail").value = e; find(); $("uEmail").scrollIntoView({ behavior: "smooth", block: "center" }); };
+      });
+    } catch (e) { $("mBody").innerHTML = '<p class="msg bad">' + esc(e.message) + "</p>"; }
+  }
+  $("mClose").onclick = function () { $("modal").classList.add("hidden"); };
+  $("modal").onclick = function (e) { if (e.target === $("modal")) $("modal").classList.add("hidden"); };
+
+  // ---------- Menú de 3 puntitos ----------
+  function openMenu(anchor, items) {
+    var m = $("menu");
+    m.innerHTML = items.map(function (it, i) { return '<button data-x="' + i + '" class="' + (it.red ? "red" : "") + '">' + esc(it.t) + "</button>"; }).join("");
+    var r = anchor.getBoundingClientRect();
+    m.classList.remove("hidden");
+    m.style.top = Math.min(window.innerHeight - m.offsetHeight - 8, r.bottom + 4) + "px";
+    m.style.left = Math.max(8, Math.min(window.innerWidth - m.offsetWidth - 8, r.right - m.offsetWidth)) + "px";
+    Array.prototype.forEach.call(m.querySelectorAll("button"), function (b) {
+      b.onclick = async function () { m.classList.add("hidden"); try { await items[+b.getAttribute("data-x")].f(); } catch (e) { alert(e.message); } };
+    });
+  }
+  document.addEventListener("click", function (e) { if (!$("menu").contains(e.target)) $("menu").classList.add("hidden"); });
+  function askReason() { var r = prompt("Motivo (lo verá la persona en su teléfono):"); if (r === null) return null; r = r.trim(); if (!r) { alert("Escribe el motivo."); return null; } return r; }
+  function askDays() { var d = prompt("¿Cuántos días?", "7"); if (d === null) return null; d = parseInt(d, 10); if (!(d > 0)) { alert("Escribe un número de días."); return null; } return d; }
+  function installMenu(b) {
+    var id = b.getAttribute("data-i"), email = b.getAttribute("data-e"), model = b.getAttribute("data-m") || "este teléfono";
+    var items = [
+      { t: "⛔ Bloquear para siempre", red: true, f: async function () { var r = askReason(); if (!r) return; if (!confirm("¿Bloquear " + model + " para siempre? No podrá usar SAOKO aunque reinstale.")) return; await rpc("admin_block_device", { p_install: id, p_reason: r, p_days: null }); done("Teléfono bloqueado para siempre."); } },
+      { t: "⏳ Bloquear por días…", red: true, f: async function () { var d = askDays(); if (!d) return; var r = askReason(); if (!r) return; await rpc("admin_block_device", { p_install: id, p_reason: r, p_days: d }); done("Teléfono bloqueado " + d + " días."); } },
+      { t: "✅ Quitar bloqueo", f: async function () { var n = await rpc("admin_unblock_device", { p_install: id }); var p = n ? await pushOne({ type: "guard", install_id: id }) : ""; done(n ? "Bloqueo quitado." + p : "Ese teléfono no estaba bloqueado."); } },
+      { t: "📋 Copiar identificador", f: async function () { await navigator.clipboard.writeText(id); } },
+    ];
+    if (email) items.splice(0, 0, { t: "👤 Ver su cuenta", f: function () { $("uEmail").value = email; find(); $("uEmail").scrollIntoView({ behavior: "smooth", block: "center" }); } });
+    items.push({ t: "🗑 Quitar del registro", red: true, f: async function () { if (!confirm("¿Quitar esta instalación del registro? (Si vuelve a abrir SAOKO, aparece otra vez)")) return; await rpc("admin_delete_install", { p_install: id }); done("Instalación quitada."); } });
+    openMenu(b, items);
+  }
+  function userMenu(b) {
+    var id = b.getAttribute("data-u"), email = b.getAttribute("data-e");
+    openMenu(b, [
+      { t: "👤 Ver y gestionar", f: function () { $("uEmail").value = email; find(); $("uEmail").scrollIntoView({ behavior: "smooth", block: "center" }); } },
+      { t: "🎁 Enviar regalo o cupón solo a él/ella", f: function () { giftTo(email); } },
+      { t: "🚫 Banear correo para siempre", red: true, f: async function () { var r = askReason(); if (!r) return; await rpc("admin_ban_email", { p_email: email, p_reason: r, p_days: null }); done(email + " baneado."); } },
+      { t: "⏳ Suspender por días…", red: true, f: async function () { var d = askDays(); if (!d) return; var r = askReason(); if (!r) return; await rpc("admin_ban_email", { p_email: email, p_reason: r, p_days: d }); done(email + " suspendido " + d + " días."); } },
+      { t: "✅ Quitar baneo", f: async function () { var n = await rpc("admin_unban_email", { p_email: email }); var p = n ? await pushOne({ type: "guard", email: email }) : ""; done(n ? "Baneo quitado." + p : "No estaba baneado."); } },
+      { t: "📋 Copiar correo", f: async function () { await navigator.clipboard.writeText(email); } },
+      { t: "🗑 Eliminar cuenta", red: true, f: async function () { await deleteAccount(id, email); } },
+    ]);
+  }
+  function done(text) { alert(text); loadOverview(); loadBlocks(); loadUsers(); loadInstalls(); }
+  async function deleteAccount(id, email) {
+    if (!confirm("¿Eliminar la cuenta " + email + "? Se borra también en Supabase y no se puede deshacer.")) return;
+    if (prompt("Para confirmar escribe ELIMINAR") !== "ELIMINAR") return;
+    await rpc("admin_delete_account", { p_user: id });
+    done("Cuenta eliminada.");
+  }
+  function giftTo(email) {
+    $("nTarget").value = email; $("nKind").value = "gift"; $("nKind").onchange();
+    $("nTitle").focus(); $("nTitle").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  $("toThis").onclick = function () { giftTo($("uEmail").value.trim()); };
+  $("ban").onclick = function () {
+    var r = $("banReason").value.trim(), d = parseInt($("banDays").value, 10);
+    if (!r) return say("userMsg", "Escribe el motivo (lo verá la persona).", false);
+    if (!confirm(d > 0 ? "¿Suspender esta cuenta " + d + " días?" : "¿Banear este correo para siempre?")) return;
+    act(this, function () { return rpc("admin_ban_email", { p_email: $("uEmail").value, p_reason: r, p_days: d > 0 ? d : null }); },
+      function (x) { loadBlocks(); return x.until ? "Suspendida hasta " + day(x.until) + "." : "Correo baneado para siempre."; });
+  };
+  $("unban").onclick = function () {
+    var em = $("uEmail").value;
+    act(this, function () { return rpc("admin_unban_email", { p_email: em }); }, function (n) { loadBlocks(); if (n) pushOne({ type: "guard", email: em }); return n ? "Baneo quitado. Se le avisó con una notificación." : "No estaba baneado."; });
+  };
+  $("delAcc").onclick = async function () {
+    var u = await rpc("admin_find_user", { p_email: $("uEmail").value.trim() });
+    if (u) { try { await deleteAccount(u.id, u.email); $("user").classList.add("hidden"); $("userTools").classList.add("hidden"); } catch (e) { say("userMsg", e.message, false); } }
+  };
+  $("cleanup").onclick = async function () {
+    if (!confirm("¿Limpiar? Se quitan los perfiles de cuentas que ya no existen y las instalaciones sin cuenta que se abrieron una sola vez hace más de 30 días.")) return;
+    var r = await rpc("admin_cleanup");
+    alert("Listo: " + r.profiles + " perfil(es) y " + r.installs + " instalación(es) quitados."); loadOverview(); loadUsers(); loadInstalls();
+  };
+  $("nKind").onchange = function () { $("nCouponBox").classList.toggle("hidden", $("nKind").value !== "coupon"); };
+
+  // ---------- Bloqueos ----------
+  async function loadBlocks() {
+    var r = await rpc("admin_blocks");
+    var d = r.devices.map(function (x) {
+      return '<li class="rec"><div class="txt"><b>⛔ ' + esc(x.device_model || "Teléfono") + "</b> " + flag(x.country) + ' <code>' + esc(String(x.install_id || "").slice(0, 8)) + '</code><br><span class="muted">' +
+        esc(x.reason) + " · " + (x.until ? "hasta " + day(x.until) + " (" + countdown(x.until) + ")" : "para siempre") + '</span></div><button class="ghost" data-ub="' + esc(x.install_id) + '">Quitar</button></li>';
+    });
+    var e = r.emails.map(function (x) {
+      return '<li class="rec"><div class="txt"><b>🚫 ' + esc(x.email) + '</b><br><span class="muted">' + esc(x.reason) + " · " + (x.until ? "suspendido hasta " + day(x.until) + " (" + countdown(x.until) + ")" : "baneado para siempre") +
+        '</span></div><button class="ghost" data-ue="' + esc(x.email) + '">Quitar</button></li>';
+    });
+    $("blocks").innerHTML = d.concat(e).join("") || '<li class="muted">Nadie bloqueado.</li>';
+    Array.prototype.forEach.call($("blocks").querySelectorAll("button"), function (b) {
+      b.onclick = async function () {
+        if (b.hasAttribute("data-ub")) { await rpc("admin_unblock_device", { p_install: b.getAttribute("data-ub") }); pushOne({ type: "guard", install_id: b.getAttribute("data-ub") }); }
+        else { await rpc("admin_unban_email", { p_email: b.getAttribute("data-ue") }); pushOne({ type: "guard", email: b.getAttribute("data-ue") }); }
+        loadBlocks(); loadOverview();
+      };
+    });
+  }
+
+  // ---------- SAOKO Chat ----------
+  async function loadChat() {
+    var r = await rpc("admin_chat_recent", { p_limit: 80 });
+    $("chatList").innerHTML = (r.messages || []).map(function (m) {
+      return '<div class="bubble them" data-c="' + m.id + '"><b>' + esc(m.name) + "</b> <span class=\"muted\">" + esc(m.email || "") + "</span><br>" +
+        (m.deleted ? '<span class="del">Mensaje eliminado</span>' : (m.kind === "mix" ? "🎛 Compartió un MIX " : "") + esc(m.body)) +
+        "<small>" + day(m.created_at) + "</small>" + (m.deleted ? "" : '<div class="acts"><a data-del="' + m.id + '">🗑 Eliminar</a></div>') + "</div>";
+    }).join("") || '<div class="muted">Sin mensajes todavía.</div>';
+    Array.prototype.forEach.call($("chatList").querySelectorAll("[data-del]"), function (a) {
+      a.onclick = async function () { if (!confirm("¿Eliminar este mensaje del chat?")) return; await rpc("admin_chat_delete", { p_id: parseInt(a.getAttribute("data-del"), 10) }); loadChat(); };
+    });
+    $("chatStrikes").innerHTML = (r.strikes || []).map(function (s) {
+      return "⚠️ " + esc(s.email || "?") + " · " + esc(s.reason) + " · " + day(s.created_at) + "<br><i>" + esc(s.sample || "") + "</i>";
+    }).join("<br><br>") || "Sin faltas.";
+  }
+  $("chatLoad").onclick = function () { loadChat().catch(function (e) { alert(e.message); }); };
+
+  // ---------- Servicio al cliente ----------
+  var supStatus = "open", supThread = null;
+  async function loadThreads() {
+    var list = await rpc("admin_support_threads", { p_status: supStatus });
+    window.supThreads = list;
+    $("threads").innerHTML = list.map(function (t) {
+      return '<div class="thread' + (t.id === supThread ? " on" : "") + '" data-t="' + esc(t.id) + '"><b>' + esc(t.account_email || t.email || "Sin correo") + "</b> " +
+        (t.unread_admin ? '<span class="badge">' + esc(t.unread_admin) + "</span>" : "") + '<br><span class="muted">' + (t.source === "web" ? "🌐 Web" : "📱 App") + " · " + ago(t.last_at) +
+        (t.country ? " · " + flag(t.country) : "") + (t.flagged ? " · ⚠️ MAYA" : "") + "</span><br>" + (t.last_from_admin ? "↪ " : "") + esc(String(t.last_body || "").slice(0, 70)) + "</div>";
+    }).join("") || '<div class="thread muted">No hay conversaciones.</div>';
+    Array.prototype.forEach.call($("threads").querySelectorAll(".thread[data-t]"), function (el) {
+      el.onclick = function () { openThread(el.getAttribute("data-t")); };
+    });
+  }
+  var supMsgs = [], supReplyTo = null, supEditing = null;
+  function linkify(s) {
+    return esc(s).replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+)/g, function (u) {
+      var href = u.indexOf("http") === 0 ? u : "https://" + u;
+      return '<a href="' + href + '" target="_blank" rel="noopener">' + u + "</a>";
+    });
+  }
+  function bubbleHtml(m) {
+    if (m.deleted) return '<div class="bubble ' + (m.from_admin ? "me" : "them") + '"><span class="del">Mensaje eliminado</span><small>' + day(m.created_at) + "</small></div>";
+    var q = m.reply_to ? supMsgs.filter(function (x) { return x.id === m.reply_to; })[0] : null;
+    var a = m.attachment, att = "";
+    if (a) {
+      if (a.kind === "image" && a.url) att = '<a href="' + esc(a.url) + '" target="_blank" rel="noopener"><img class="att" src="' + esc(a.url) + '" alt=""></a>';
+      else att = '<a class="file" href="' + esc(a.url || "#") + '" target="_blank" rel="noopener">' + (a.kind === "apk" ? "🤖" : "📄") + " " + esc(a.name || "archivo") + "</a>";
+    }
+    return '<div class="bubble ' + (m.from_admin ? "me" : "them") + '" data-m="' + m.id + '">' +
+      (q ? '<div class="quote">' + (q.from_admin ? "Tú" : "Usuario") + ": " + esc(String(q.body || (q.attachment && q.attachment.name) || "").slice(0, 120)) + "</div>" : "") +
+      att + (m.body ? linkify(m.body) : "") +
+      "<small>" + day(m.created_at) + (m.edited_at ? " · editado" : "") + "</small>" +
+      '<div class="acts"><a data-act="reply">↩ Responder</a>' + (m.from_admin ? '<a data-act="edit">✏️ Editar</a><a data-act="del">🗑 Eliminar</a>' : '<a data-act="del">🗑 Eliminar</a>') + "</div></div>";
+  }
+  function showReplying() {
+    var el = $("supReplying");
+    if (supEditing) { el.innerHTML = "✏️ Editando tu mensaje · <a id=\"supCancel\" style=\"cursor:pointer\">cancelar</a>"; }
+    else if (supReplyTo) { el.innerHTML = "↩ Respondiendo a: <i>" + esc(String(supReplyTo.body || "").slice(0, 80)) + "</i> · <a id=\"supCancel\" style=\"cursor:pointer\">cancelar</a>"; }
+    el.classList.toggle("hidden", !supEditing && !supReplyTo);
+    var c = $("supCancel"); if (c) c.onclick = function () { supReplyTo = null; if (supEditing) $("supReply").value = ""; supEditing = null; showReplying(); };
+  }
+  async function openThread(id) {
+    var changed = supThread !== id;
+    supThread = id;
+    if (changed) { supReplyTo = null; supEditing = null; showReplying(); }
+    var msgs = await rpc("admin_support_messages", { p_thread: id });
+    // Adjuntos privados: enlace firmado de 1 hora.
+    for (var i = 0; i < msgs.length; i++) {
+      var a = msgs[i].attachment;
+      if (a && a.path) { var s = await sb.storage.from("support").createSignedUrl(a.path, 3600); a.url = s.data ? s.data.signedUrl : null; }
+    }
+    var atBottom = $("msgs").scrollHeight - $("msgs").scrollTop - $("msgs").clientHeight < 40;
+    supMsgs = msgs;
+    $("msgs").innerHTML = msgs.map(bubbleHtml).join("");
+    if (changed || atBottom) $("msgs").scrollTop = $("msgs").scrollHeight;
+    Array.prototype.forEach.call($("msgs").querySelectorAll(".acts a"), function (el) {
+      el.onclick = async function () {
+        var mid = parseInt(el.closest(".bubble").getAttribute("data-m"), 10);
+        var m = supMsgs.filter(function (x) { return x.id === mid; })[0];
+        var act = el.getAttribute("data-act");
+        if (act === "reply") { supReplyTo = m; supEditing = null; showReplying(); $("supReply").focus(); }
+        if (act === "edit") { supEditing = m; supReplyTo = null; $("supReply").value = m.body; showReplying(); $("supReply").focus(); }
+        if (act === "del" && confirm("¿Eliminar este mensaje?")) { await rpc("admin_support_delete", { p_id: mid }); openThread(supThread); }
+      };
+    });
+    var t = (window.supThreads || []).filter(function (x) { return x.id === id; })[0] || {};
+    // Teléfono de la persona (para ayudar con la instalación) y alertas de MAYA.
+    var abis = String(t.abis || "");
+    var apk = !t.device_model ? "" : (abis.indexOf("arm64") >= 0 ? "Le sirven las dos (Universal o ligera de 64 bits)." : "Mándale la <b>Universal</b> (su teléfono no es de 64 bits).");
+    $("supHead").innerHTML = "<b>" + esc(t.account_email || t.email || "Sin correo") + "</b>" +
+      '<div class="devbox">' + (t.device_model ? "📱 " + esc(t.device_model) + " · Android " + esc(t.android_version || "?") + " · SAOKO " + esc(t.app_version || "?") +
+        (abis ? " · " + esc(abis) : "") + "<br>" + apk : (t.source === "web" ? "🌐 Escribió desde la página web (sin la app)." : "Sin datos del teléfono.")) +
+      (t.flagged ? '<br><span class="warnbox">⚠️ MAYA bloqueó ' + t.flagged + " intento(s) de mandar contenido +18.</span>" : "") + "</div>";
+    if (changed) { loadThreads(); loadOverview(); }
+  }
+  async function supNotify() { return pushOne({ type: "support", thread: supThread }); }
+  $("supSend").onclick = async function () {
+    var text = $("supReply").value.trim();
+    if (!supThread) return say("supMsg", "Elige una conversación.", false);
+    if (!text) return say("supMsg", "Escribe tu respuesta.", false);
+    this.disabled = true;
+    try {
+      if (supEditing) { await rpc("admin_support_edit", { p_id: supEditing.id, p_body: text }); say("supMsg", "Mensaje editado.", true); }
+      else { await rpc("admin_support_reply", { p_thread: supThread, p_body: text, p_reply: supReplyTo ? supReplyTo.id : null, p_attachment: null }); say("supMsg", "Respuesta enviada." + await supNotify(), true); }
+      $("supReply").value = ""; supReplyTo = null; supEditing = null; showReplying(); openThread(supThread);
+    } catch (e) { say("supMsg", e.message, false); }
+    this.disabled = false;
+  };
+  // Archivo del equipo (sin revisión de MAYA): se sube y se manda.
+  $("supAttach").onclick = function () { if (!supThread) return say("supMsg", "Elige una conversación.", false); $("supFile").click(); };
+  $("supFile").onchange = async function () {
+    var f = this.files[0]; this.value = "";
+    if (!f) return;
+    if (f.size > 8 * 1048576) return say("supMsg", "El archivo pesa más de 8 MB. Para el APK usa “Enviar APK”.", false);
+    var mime = f.type || (f.name.endsWith(".docx") ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : f.name.endsWith(".doc") ? "application/msword" : "");
+    say("supMsg", "Subiendo…", true);
+    var data = await new Promise(function (ok) { var r = new FileReader(); r.onload = function () { ok(String(r.result).split(",")[1]); }; r.readAsDataURL(f); });
+    var r = await sb.functions.invoke("support", { body: { action: "admin_file", thread: supThread, file: { name: f.name, mime: mime, data: data } } });
+    if (r.error || !r.data || !r.data.attachment) return say("supMsg", "No se pudo subir el archivo.", false);
+    await rpc("admin_support_reply", { p_thread: supThread, p_body: $("supReply").value.trim(), p_reply: supReplyTo ? supReplyTo.id : null, p_attachment: r.data.attachment });
+    $("supReply").value = ""; supReplyTo = null; showReplying();
+    say("supMsg", "Archivo enviado." + await supNotify(), true); openThread(supThread);
+  };
+  // APK: el enlace de la versión publicada (Universal o ligera de 64 bits).
+  $("supApk").onclick = async function () {
+    if (!supThread) return say("supMsg", "Elige una conversación.", false);
+    var which = prompt("¿Qué APK le mandas?\n1 = Universal (sirve en todos los teléfonos)\n2 = Ligera (solo 64 bits)", "1");
+    if (!which) return;
+    var light = which.trim() === "2";
+    var base = "https://github.com/saokomusic/saokomusic.github.io/releases/latest/download/";
+    var att = { kind: "apk", name: light ? "SAOKO ligera (64 bits).apk" : "SAOKO Universal.apk", url: base + (light ? "SAOKO-arm64.apk" : "SAOKO-universal.apk") };
+    await rpc("admin_support_reply", { p_thread: supThread, p_body: $("supReply").value.trim() || "Aquí tienes SAOKO. Tócalo para descargarlo e instalarlo.", p_reply: null, p_attachment: att });
+    $("supReply").value = "";
+    say("supMsg", "APK enviado." + await supNotify(), true); openThread(supThread);
+  };
+  $("supClose").onclick = async function () {
+    if (!supThread) return;
+    await rpc("admin_support_close", { p_thread: supThread, p_closed: true }); say("supMsg", "Conversación cerrada.", true); supThread = null; $("msgs").innerHTML = ""; loadThreads();
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("#supFilter .chip"), function (el) {
+    el.onclick = function () {
+      supStatus = el.getAttribute("data-s");
+      Array.prototype.forEach.call(document.querySelectorAll("#supFilter .chip"), function (x) { x.classList.toggle("on", x === el); });
+      loadThreads();
+    };
+  });
+  // Mensajes nuevos cada 30 segundos.
+  setInterval(function () { if (!$("app").classList.contains("hidden")) { loadThreads().catch(function () {}); } }, 30000);
+  setInterval(function () { if (!$("app").classList.contains("hidden") && supThread) openThread(supThread).catch(function () {}); }, 8000);
+
+  show();
+</script>
+</body>
+</html>
