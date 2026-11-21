@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAOKO Studio · Panel</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="SAOKO Studio: mockups 3D de iPhone, Samsung Galaxy y Google Pixel con sus medidas reales. Pon tus capturas, crea composiciones y expórtalas en alta resolución.">
+  <meta name="theme-color" content="#0F0A1A">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
+  <script>
+    // SAOKO Studio es parte del panel: sin la sesión del panel abierta, se va a entrar.
+    (function () {
+      var ok = false;
+      try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/^sb-.*-auth-token$/.test(k) && localStorage.getItem(k)) ok = true; } } catch (e) {}
+      if (!ok) location.replace("./?studio=1");
+    })();
+  </script>
+  <script>
+    if (window.top !== window.self) window.top.location = window.self.location;
+    try { var t = localStorage.getItem("saoko-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="/img/saoko-icon.svg?v=3">
+  <link rel="icon" type="image/png" href="/img/saoko-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=block" rel="stylesheet">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+  </script>
+  <style>
+    :root {
+      --bg: #F6F4FA; --panel: #FFFFFF; --ink: #17122A; --muted: #6E6888; --line: rgba(40, 20, 80, .10);
+      --soft: #EFEAF8; --accent: #E412C2; --accent2: #8E5BFF; --shadow: rgba(60, 20, 120, .14); color-scheme: light;
+    }
+    :root[data-theme="dark"] { --bg: #0D0A16; --panel: #161124; --ink: #F3EEFF; --muted: #A49CC0; --line: rgba(255, 255, 255, .09); --soft: #1F1833; --shadow: rgba(0, 0, 0, .5); color-scheme: dark; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0D0A16; --panel: #161124; --ink: #F3EEFF; --muted: #A49CC0; --line: rgba(255, 255, 255, .09); --soft: #1F1833; --shadow: rgba(0, 0, 0, .5); color-scheme: dark; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 "Plus Jakarta Sans", system-ui, sans-serif; }
+    .icon { font-family: "Material Symbols Rounded"; font-size: 20px; line-height: 1; vertical-align: middle; font-weight: normal; }
+    h1, h2, h3, .tech { font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif; letter-spacing: -.01em; }
+    button, input, select { font: inherit; color: inherit; }
+    a { color: inherit; }
+
+    /* Barra superior */
+    .top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 14px; height: 62px; padding: 0 18px;
+      background: color-mix(in srgb, var(--panel) 86%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+    .logo img { width: 30px; height: 30px; }
+    .logo span { font-family: "Space Grotesk"; font-size: 18px; }
+    .logo b { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .tabs { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--soft); margin-left: 12px; }
+    .tabs button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; color: var(--muted); }
+    .tabs button.on { background: var(--panel); color: var(--ink); box-shadow: 0 2px 10px var(--shadow); }
+    .spacer { flex: 1; }
+    .iconbtn { width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; display: grid; place-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 12px; padding: 10px 16px; cursor: pointer; font-weight: 700; }
+    .btn-accent { color: #fff; background: linear-gradient(100deg, var(--accent), var(--accent2)); box-shadow: 0 10px 24px -8px rgba(228, 18, 194, .6); }
+    .btn-soft { background: var(--soft); }
+
+    /* ---------------- Galería ---------------- */
+    #gallery { padding: 26px clamp(16px, 4vw, 48px) 60px; }
+    .ghead { display: flex; flex-wrap: wrap; align-items: end; gap: 18px; margin-bottom: 22px; }
+    .ghead h1 { margin: 0; font-size: clamp(28px, 4vw, 44px); line-height: 1.05; }
+    .ghead p { margin: 6px 0 0; color: var(--muted); max-width: 560px; }
+    .search { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); min-width: 260px; margin-left: auto; }
+    .search input { border: 0; outline: 0; background: transparent; flex: 1; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+    .chip { border: 1px solid var(--line); background: var(--panel); padding: 7px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; }
+    .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+    .card { border-radius: 24px; background: var(--panel); border: 1px solid var(--line); overflow: hidden; cursor: pointer; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 24px 50px -24px var(--shadow); }
+    .card .shot { aspect-ratio: 1 / 1.05; background: radial-gradient(120% 90% at 50% 10%, var(--soft), var(--panel)); display: grid; place-items: center; overflow: hidden; }
+    .card .shot img { width: 100%; height: 100%; object-fit: contain; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+    .card:hover .shot img { transform: scale(1.06) rotate(-1.5deg); }
+    .card .info { padding: 14px 16px 16px; }
+    .card h3 { margin: 0; font-size: 17px; }
+    .card .sub { color: var(--muted); font-size: 12.5px; }
+    .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin: 10px 0; font-size: 12px; }
+    .specs b { display: block; font-size: 10.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+    .swatches { display: flex; gap: 6px; }
+    .sw { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--panel); box-shadow: 0 0 0 1px var(--line); }
+    .os { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: var(--soft); }
+
+    /* ---------------- Editor ---------------- */
+    #editor { display: none; grid-template-columns: 280px 1fr 300px; height: calc(100vh - 62px); }
+    body.editing #editor { display: grid; }
+    body.editing #gallery { display: none; }
+    .side { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; padding: 16px; }
+    .side.right { border-right: 0; border-left: 1px solid var(--line); }
+    .side h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 18px 0 10px; }
+    .side h3:first-child { margin-top: 0; }
+    .comp { display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; font-weight: 600; }
+    .comp:hover, .comp.on { border-color: var(--accent); }
+    .layer { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 12px; cursor: pointer; margin-bottom: 4px; }
+    .layer.on { background: var(--soft); }
+    .layer span { flex: 1; }
+    .stage { position: relative; overflow: hidden; background: var(--soft); }
+    .stage canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+    .labels { position: absolute; inset: 0; pointer-events: none; }
+    .lab { position: absolute; transform: translate(-50%, 0); font: 600 12px "Space Grotesk"; background: var(--panel); border: 1px solid var(--line); padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
+    .toolbar { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 16px; background: var(--panel); box-shadow: 0 14px 34px -12px var(--shadow); border: 1px solid var(--line); }
+    .toolbar button { border: 0; background: transparent; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .toolbar button.on, .toolbar button:hover { background: var(--soft); }
+    .field { margin-bottom: 12px; }
+    .field label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+    .field input[type=range] { width: 100%; accent-color: var(--accent); }
+    .field select { width: 100%; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); }
+    .bgs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .bg { aspect-ratio: 1; border-radius: 10px; border: 2px solid transparent; cursor: pointer; }
+    .bg.on { border-color: var(--accent); }
+    .screens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .screens img { width: 100%; aspect-ratio: 1 / 2; object-fit: cover; object-position: top; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
+    .screens img.on { border-color: var(--accent); }
+    .colors { display: flex; flex-wrap: wrap; gap: 8px; }
+    .colors button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--panel); box-shadow: 0 0 0 1px var(--line); cursor: pointer; }
+    .colors button.on { box-shadow: 0 0 0 2px var(--accent); }
+    .row2 { display: flex; gap: 8px; }
+    .row2 > * { flex: 1; }
+    .empty { color: var(--muted); font-size: 13px; }
+    .measure-note { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; font-size: 12px; display: none; }
+    body.measuring .measure-note { display: block; }
+    .drop { position: absolute; inset: 0; display: none; place-items: center; background: rgba(228, 18, 194, .12); border: 3px dashed var(--accent); font-weight: 700; font-size: 18px; }
+    .stage.dragging .drop { display: grid; }
+
+    /* Exportar */
+    .modal { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; background: rgba(0, 0, 0, .45); padding: 16px; }
+    .modal.on { display: grid; }
+    .modal-box { width: min(420px, 100%); background: var(--panel); border-radius: 22px; padding: 22px; }
+    .modal-box h2 { margin: 0 0 14px; }
+    .opts { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .opts button { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
+    .opts button.on { border-color: var(--accent); background: var(--soft); }
+    .noweb { padding: 40px; text-align: center; }
+
+    @media (max-width: 980px) {
+      #editor { grid-template-columns: 1fr; grid-template-rows: 52vh auto auto; height: auto; }
+      .stage { order: -1; min-height: 52vh; }
+      .side { border: 0; }
+      .tabs { margin-left: auto; }
+      .top .hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <a class="logo" href="./"><img src="/img/saoko-touch.png" alt=""><span>SAOKO <b>Studio</b></span></a>
+    <div class="tabs" role="tablist">
+      <button type="button" id="tabGallery" class="on">Galería</button>
+      <button type="button" id="tabEditor">Editor</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="theme" type="button" title="Modo claro / oscuro"><span class="icon">contrast</span></button>
+    <a class="btn btn-soft hide-sm" href="./"><span class="icon">arrow_back</span>Volver al panel</a>
+  </div>
+
+  <!-- =================== GALERÍA =================== -->
+  <section id="gallery">
+    <div class="ghead">
+      <div>
+        <h1 class="tech">Teléfonos reales, <span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">medidas reales</span>.</h1>
+        <p>Cada modelo está construido en 3D con sus medidas oficiales. Elige uno para ponerle tus capturas, girarlo, iluminarlo y exportarlo en alta resolución.</p>
+      </div>
+      <label class="search"><span class="icon">search</span><input id="q" type="search" placeholder="Buscar: iPhone 17, Galaxy, Pixel, 6.9…"></label>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" style="margin-top:24px">Más modelos (Xiaomi, Motorola, Galaxy S26 y otros) se agregarán cuando estén sus medidas oficiales verificadas: aquí solo aparece lo que se puede representar con precisión.</p>
+  </section>
+
+  <!-- =================== EDITOR =================== -->
+  <section id="editor">
+    <aside class="side">
+      <h3>Composiciones</h3>
+      <div id="comps"></div>
+      <h3>Teléfonos en la escena</h3>
+      <div id="layers"></div>
+      <div class="row2" style="margin-top:8px">
+        <select id="addModel"></select>
+        <button class="btn btn-soft" id="addBtn" type="button" title="Agregar"><span class="icon">add</span></button>
+      </div>
+    </aside>
+
+    <div class="stage" id="stage">
+      <canvas id="canvas"></canvas>
+      <div class="labels" id="labels"></div>
+      <div class="measure-note">Modo medición: vista de frente y proporciones reales (sin perspectiva).</div>
+      <div class="drop">Suelta tu captura para ponerla en la pantalla</div>
+      <div class="toolbar">
+        <button type="button" id="fitBtn" title="Encuadrar"><span class="icon">fit_screen</span>Encuadrar</button>
+        <button type="button" id="measureBtn" title="Modo medición"><span class="icon">straighten</span>Medir</button>
+        <button type="button" id="exportBtn" class="btn-accent" style="color:#fff;background:linear-gradient(100deg,var(--accent),var(--accent2))"><span class="icon">download</span>Exportar</button>
+      </div>
+    </div>
+
+    <aside class="side right" id="props">
+      <h3>Teléfono seleccionado</h3>
+      <div id="sel"></div>
+      <h3>Escena</h3>
+      <div class="field"><label>Fondo</label><div class="bgs" id="bgs"></div></div>
+      <div class="field"><label>Luz: dirección <span id="vLa"></span></label><input type="range" id="la" min="-80" max="80" value="35"></div>
+      <div class="field"><label>Luz: altura <span id="vLh"></span></label><input type="range" id="lh" min="10" max="85" value="45"></div>
+      <div class="field"><label>Luz: intensidad <span id="vLi"></span></label><input type="range" id="li" min="20" max="200" value="100"></div>
+      <div class="field"><label>Sombra: intensidad <span id="vSo"></span></label><input type="range" id="so" min="0" max="90" value="22"></div>
+      <div class="field"><label>Sombra: suavidad <span id="vSs"></span></label><input type="range" id="ss" min="1" max="40" value="28"></div>
+      <div class="field"><label>Perspectiva (lente) <span id="vFov"></span></label><input type="range" id="fov" min="12" max="55" value="26"></div>
+    </aside>
+  </section>
+
+  <div class="modal" id="exportModal">
+    <div class="modal-box">
+      <h2 class="tech">Exportar imagen</h2>
+      <div class="field"><label>Formato</label><div class="opts" id="fmt"><button data-v="png" class="on">PNG</button><button data-v="jpeg">JPG</button><button data-v="webp">WebP</button></div></div>
+      <div class="field"><label>Resolución</label><div class="opts" id="scale"><button data-v="2">2×</button><button data-v="3" class="on">3×</button><button data-v="4">4× (máxima)</button></div></div>
+      <div class="field"><label><span><input type="checkbox" id="transp"> Fondo transparente (PNG y WebP)</span></label></div>
+      <p class="empty" id="exportInfo"></p>
+      <div class="row2"><button class="btn btn-soft" id="exportCancel" type="button">Cancelar</button><button class="btn btn-accent" id="exportGo" type="button"><span class="icon">download</span>Descargar</button></div>
+    </div>
+  </div>
+
+  <input type="file" id="upload" accept="image/png,image/jpeg,image/webp" hidden>
+  <script type="module" src="/studio/app.js"></script>
+</body>
+</html>
