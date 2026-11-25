@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>SAOKO · Invitación a un plan</title>
+  <meta property="og:title" content="Te invitaron a un plan de SAOKO">
+  <meta property="og:description" content="Toca para unirte gratis al plan de SAOKO de quien te invitó.">
+  <meta property="og:image" content="https://saokomusic.github.io/img/og.png">
+  <link rel="icon" type="image/svg+xml" href="img/saoko-icon.svg?v=3"><link rel="icon" type="image/png" href="img/saoko-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0B0A12; --muted: #A8A4BF; --gradient: linear-gradient(90deg, #FF00B0, #A6A3FF); color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box;
+      background: radial-gradient(80% 60% at 50% 0%, rgba(255, 0, 176, .25), transparent 70%), var(--bg);
+      color: #fff; font-family: "Plus Jakarta Sans", system-ui, sans-serif; text-align: center; }
+    .card { max-width: 420px; }
+    img { width: 92px; height: 92px; border-radius: 26px; box-shadow: 0 14px 40px rgba(255, 0, 176, .4); }
+    h1 { font-size: 28px; margin: 22px 0 10px; }
+    p { color: var(--muted); margin: 0 0 22px; line-height: 1.55; }
+    .code { font-size: 26px; font-weight: 800; letter-spacing: 6px; margin: 0 0 22px; }
+    a.btn, button.btn { display: block; width: 100%; box-sizing: border-box; padding: 15px 30px; border: 0; border-radius: 999px; background: var(--gradient);
+      color: #fff; font: 700 16px "Plus Jakarta Sans", system-ui, sans-serif; text-decoration: none; margin-bottom: 12px; cursor: pointer; }
+    a.ghost { display: block; color: var(--muted); padding: 8px; }
+    ol { text-align: left; color: var(--muted); line-height: 1.6; padding-left: 22px; margin: 18px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="img/logo-rounded.png" alt="SAOKO">
+    <h1>Te invitaron a un plan de SAOKO</h1>
+    <p>Toca <b>Abrir en SAOKO</b>: la app se abre con el código ya escrito y solo tocas <b>Unirme</b>.</p>
+    <div class="code" id="code"></div>
+    <a class="btn" id="open" href="#">Abrir en SAOKO</a>
+    <a class="ghost" href="./">¿No tienes SAOKO? Descárgala gratis</a>
+    <ol>
+      <li>Instala SAOKO y crea tu Cuenta SAOKO (gratis).</li>
+      <li>Vuelve a este enlace y toca <b>Abrir en SAOKO</b>.</li>
+      <li>O en la app: toca tu foto → <b>Unirme a un plan</b> y escribe el código.</li>
+    </ol>
+  </div>
+  <script>
+    var c = (new URLSearchParams(location.search).get("c") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+    document.getElementById("code").textContent = c;
+    var scheme = "saoko://invite?code=" + c;
+    var android = /android/i.test(navigator.userAgent);
+    // En Android se usa "intent:": si SAOKO no está instalada, Chrome lleva a la página de descarga.
+    var fallback = encodeURIComponent(location.origin + "/");
+    var link = android
+      ? "intent://invite?code=" + c + "#Intent;scheme=saoko;package=com.saoko.music;S.browser_fallback_url=" + fallback + ";end"
+      : scheme;
+    document.getElementById("open").href = link;
+    if (c && android) setTimeout(function () { location.href = link; }, 400);
+  </script>
+</body>
+</html>

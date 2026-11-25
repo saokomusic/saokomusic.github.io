@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Copiar código · SAOKO</title>
+  <link rel="icon" type="image/svg+xml" href="img/saoko-icon.svg?v=3"><link rel="icon" type="image/png" href="img/saoko-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0B0A12; --card: #15131F; --text: #fff; --muted: #A8A4BF; color-scheme: dark; }
+    @media (prefers-color-scheme: light) { :root { --bg: #F7F5FC; --card: #fff; --text: #15121F; --muted: #5D5873; color-scheme: light; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px; background: var(--bg); color: var(--text);
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif; }
+    .card { width: min(420px, 100%); background: var(--card); border-radius: 28px; padding: 30px 24px; text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .35); }
+    img { width: 64px; height: 64px; border-radius: 18px; }
+    h1 { font-size: 20px; margin: 16px 0 6px; }
+    p { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+    .code { font-size: 38px; font-weight: 800; letter-spacing: 10px; padding: 16px 8px; border-radius: 18px;
+      background: rgba(127, 127, 127, .12); user-select: all; -webkit-user-select: all; }
+    button { margin-top: 18px; width: 100%; border: 0; border-radius: 999px; padding: 15px; font: inherit; font-weight: 800; font-size: 17px;
+      color: #fff; background: linear-gradient(90deg, #FF00B0, #A6A3FF); cursor: pointer; }
+    .ok { color: #22C55E; font-weight: 700; margin-top: 12px; min-height: 22px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img src="img/logo.png" alt="SAOKO">
+    <h1>Tu código de SAOKO</h1>
+    <p>Cópialo y vuelve a la app: SAOKO lo pega solo.</p>
+    <div class="code" id="code">——————</div>
+    <button id="copy" type="button">Copiar código</button>
+    <div class="ok" id="ok"></div>
+  </main>
+  <script>
+    // El código viaja después del "#": nunca llega a ningún servidor.
+    var code = (location.hash || "").replace("#", "").replace(/\D/g, "").slice(0, 10);
+    var el = document.getElementById("code"), ok = document.getElementById("ok");
+    if (code) el.textContent = code;
+    function copy() {
+      if (!code) return;
+      var done = function () { ok.textContent = "¡Copiado! Vuelve a SAOKO."; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, fallback);
+      else fallback();
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        try { document.execCommand("copy"); done(); } catch (e) { ok.textContent = "Mantén presionado el código para copiarlo."; }
+      }
+    }
+    document.getElementById("copy").onclick = copy;
+    copy();
+    // Se borra el código de la barra de direcciones y del historial.
+    history.replaceState(null, "", location.pathname);
+  </script>
+</body>
+</html>
